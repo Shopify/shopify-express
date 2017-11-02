@@ -1,0 +1,35 @@
+{
+  "name": "shopify-express-app",
+  "version": "1.0.0-alpha.1",
+  "author": "Shopify Inc.",
+  "description": "Get up and running quickly with Express.js and the Shopify API.",
+  "keywords": [
+    "shopify",
+    "express.js"
+  ],
+  "bugs": "https://github.com/Shopify/shopify-express-app/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shopify/shopify-express-app.git"
+  },
+  "engines": {
+    "node": "~7.7.3"
+  },
+  "scripts": {
+    "pretty": "prettier --single-quote --trailing-comma es5 --write {middleware,routes,shopStore}{/*,/**/*}.js",
+    "precommit": "yarn run pretty"
+  },
+  "dependencies": {
+    "connect-redis": "^3.3.0",
+    "express": "~4.15.2",
+    "express-session": "^1.15.3",
+    "knex": "^0.13.0",
+    "redis": "^2.7.1",
+    "sqlite3": "^3.1.9",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.5.2"
+  }
+}
