@@ -1,11 +1,12 @@
 {
-  "name": "shopify-express",
+  "name": "@shopify/shopify-express",
   "version": "1.0.0-alpha.1",
   "author": "Shopify Inc.",
   "description": "Get up and running quickly with Express.js and the Shopify API.",
   "keywords": [
     "shopify",
-    "express.js"
+    "express.js",
+    "express middleware"
   ],
   "bugs": "https://github.com/Shopify/shopify-express-app/issues",
   "license": "MIT",
