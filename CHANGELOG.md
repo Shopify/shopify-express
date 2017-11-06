@@ -1,4 +1,6 @@
 # Change Log
 
-## v0.1.0 (2017-10-31)
+## v1.0.0-alpha.1 (11-06-2017)
+
+* Initial release including `shopifyRouter`, `withShop`, and `withWebhook`
 
