@@ -9,7 +9,6 @@ module.exports = function createWithWebhook({ secret, shopStore }) {
 
     const generated_hash = crypto
       .createHmac('sha256', SHOPIFY_APP_SECRET)
-      // probably change the parser we're using
       .update(JSON.stringify(data))
       .digest('base64');
 
