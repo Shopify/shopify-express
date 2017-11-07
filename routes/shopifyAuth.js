@@ -1,14 +1,14 @@
 const express = require('express');
 const querystring = require('querystring');
 const crypto = require('crypto');
-const shopStore = require('../shopStore');
 
-module.exports = function shopifyAuthRouter({
+module.exports = function createShopifyAuthRouter({
   host,
   apiKey,
   secret,
   scope,
   afterAuth,
+  shopStore,
 }) {
   const router = express.Router();
 
