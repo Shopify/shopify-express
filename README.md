@@ -51,6 +51,41 @@ Serves a login endpoint so merchants can access your app with a shop session.
 Proxies requests to the api for the currently logged in shop. Useful to securely use api
 endpoints from a client application without having to worry about CORS.
 
+## shopStore
+
+`shopifyExpress`'s config takes an optional `shopStore` key, You can use this to define a strategy for how the module will store your persistent data for user sessions.
+
+### Strategies
+
+By default the package comes with `MemoryStrategy`, `RedisStrategy`, and `SqliteStrategy`. If none are specified, the default is `MemoryStrategy`.
+
+You can use them in a config like so:
+
+```javascript
+const shopifyExpress = require('@shopify/shopify-express');
+const {RedisStrategy} = require('@shopify/shopify-express/strategies');
+
+const shopify = shopifyExpress({
+  shopStore: new RedisStrategy(),
+  ...restOfConfig,
+});
+```
+
+### Custom Strategy
+
+`shopifyExpress` takes a `shopStore` parameter. This can be any javascript class matching the following interface:
+
+```javascript
+  class Strategy {
+    constructor(){}
+    // shop refers to the shop's domain name
+    getShop({ shop }, done)){}
+    // shop refers to the shop's domain name
+    // data can by any serializable object
+    storeShop({ shop, accessToken, data }, done){}
+  }
+```
+
 ## Helper middleware
 
 `const {middleware: {withShop, withWebhook}} = shopifyExpress(config);`
