@@ -26,4 +26,4 @@ module.exports = function createWithWebhook({ secret, shopStore }) {
       next();
     });
   };
-}
+};

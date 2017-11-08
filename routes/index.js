@@ -11,4 +11,4 @@ module.exports = function createRouter(shopifyConfig) {
   router.use('/api', createWithShop({ redirect: false }), shopifyApiProxy);
 
   return router;
-}
+};
