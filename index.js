@@ -2,9 +2,14 @@ const createRouter = require('./routes');
 const createMiddleware = require('./middleware');
 const {MemoryStrategy} = require('./strategies');
 
-module.exports = function shopify(shopifyConfig = {shopStore: new MemoryStrategy()}) {
+module.exports = function shopify(shopifyConfig) {
+  const config = Object.assign(
+    {shopStore: new MemoryStrategy()},
+    shopifyConfig,
+  );
+
   return {
-    middleware: createMiddleware(shopifyConfig),
-    routes: createRouter(shopifyConfig),
+    middleware: createMiddleware(config),
+    routes: createRouter(config),
   };
 };
