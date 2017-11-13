@@ -1,6 +1,6 @@
 const { URL } = require('url');
 
-const ALLOWED_URLS = ['/products', '/orders'];
+const ALLOWED_URLS = ['/products', '/orders', '/product_listings'];
 
 module.exports = function shopifyApiProxy(request, response, next) {
   const { query, method, path, body, session } = request;
