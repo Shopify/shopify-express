@@ -12,7 +12,7 @@ module.exports = class RedisStrategy {
         done(err);
       }
 
-      done(null, clientToken);
+      done(null, shopData);
     });
   }
 
