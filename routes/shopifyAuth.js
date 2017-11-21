@@ -14,24 +14,26 @@ module.exports = function createShopifyAuthRouter({
 
   // This function initializes the Shopify OAuth Process
   router.get('/', function(request, response) {
-    const { query, session } = request;
+    const { query } = request;
     const { shop } = query;
 
-    if (shop) {
-      session.shop = shop;
-      const redirectTo = `https://${shop}/admin/oauth/authorize`;
-      const redirectParams = `?client_id=${apiKey}&scope=${scope}&redirect_uri=${host}/auth/shopify/callback`;
-      response.send(
-        `<!DOCTYPE html>
-        <html>
-          <head>
-            <script type="text/javascript">
-              window.top.location.href = "${redirectTo}${redirectParams}"
-            </script>
-          </head>
-        </html>`
-      );
+    if (shop == null) {
+      return response.status(400).send('Expected a shop query parameter');
     }
+
+    const redirectTo = `https://${shop}/admin/oauth/authorize`;
+    const redirectParams = `?client_id=${apiKey}&scope=${scope}&redirect_uri=${host}/auth/shopify/callback`;
+
+    response.send(
+      `<!DOCTYPE html>
+      <html>
+        <head>
+          <script type="text/javascript">
+            window.top.location.href = "${redirectTo}${redirectParams}"
+          </script>
+        </head>
+      </html>`
+    );
   });
 
   // Users are redirected here after clicking `Install`.
@@ -56,7 +58,7 @@ module.exports = function createShopifyAuthRouter({
     }
 
     if (shop == null) {
-      return response.status(400).send('Expected a shop parameter');
+      return response.status(400).send('Expected a shop query parameter');
     }
 
     const requestBody = querystring.stringify({
@@ -83,6 +85,7 @@ module.exports = function createShopifyAuthRouter({
           }
 
           request.session.accessToken = accessToken;
+          request.session.shop = shop;
           afterAuth(request, response);
         });
       });
