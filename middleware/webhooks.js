@@ -7,9 +7,16 @@ module.exports = function createWithWebhook({ secret, shopStore }) {
     const topic = request.get('X-Shopify-Topic');
     const shopDomain = request.get('X-Shopify-Shop-Domain');
 
+    // Shopify escapes forward slashes 
+    // + replaces '&' with \u0026 when the HMAC is built
+    // so we need to do the same otherwise the validation will fail
+    let message = JSON.stringify(data)
+    message = message.split('/').join('\\/');
+    message = message.split('&').join('\\u0026');
+
     const generated_hash = crypto
-      .createHmac('sha256', SHOPIFY_APP_SECRET)
-      .update(JSON.stringify(data))
+      .createHmac('sha256', secret)
+      .update(message)
       .digest('base64');
 
     if (generated_hash !== hmac) {
