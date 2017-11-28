@@ -1,14 +1,14 @@
 const { URL } = require('url');
 
 const DISALLOWED_URLS = [
-  '/admin/application_charges',
-  '/admin/application_credits',
-  '/admin/carrier_services',
-  '/admin/recurring_application_charges',
-  '/admin/script_tags',
-  '/admin/storefront_access_token',
-  '/admin/webhooks',
-  '/admin/oauth',
+  '/application_charges',
+  '/application_credits',
+  '/carrier_services',
+  '/recurring_application_charges',
+  '/script_tags',
+  '/storefront_access_token',
+  '/webhooks',
+  '/oauth',
 ];
 
 module.exports = function shopifyApiProxy(request, response, next) {
@@ -43,7 +43,7 @@ function validRequest(path) {
   const strippedPath = path.split('?')[0].split('.json')[0];
 
   return DISALLOWED_URLS.every(resource => {
-    return strippedPath.indexOf(resource) === -1
+    return strippedPath.indexOf(resource) === -1;
   });
 }
 
