@@ -1,16 +1,20 @@
 const Knex = require('knex');
 
-module.exports = class SqliteStrategy {
-  constructor() {
-    this.knex = Knex({
-      dialect: 'sqlite3',
-      useNullAsDefault: true,
-      connection: {
-        filename: './db.sqlite3',
-      },
-    });
+const defaultConfig = {
+  dialect: 'sqlite3',
+  useNullAsDefault: true,
+  connection: {
+    filename: './db.sqlite3',
+  },
+};
 
-    this.knex.schema
+module.exports = class SQLStrategy {
+  constructor(config = defaultConfig) {
+    this.knex = Knex(config);
+  }
+
+  initialize() {
+    return this.knex.schema
       .createTableIfNotExists('shops', table => {
         table.increments('id');
         table.string('shopify_domain');
