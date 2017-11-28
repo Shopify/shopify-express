@@ -1,10 +1,13 @@
 {
   "name": "@shopify/shopify-express",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "author": "Shopify Inc.",
-  "description":
-    "Get up and running quickly with Express.js and the Shopify API.",
-  "keywords": ["shopify", "express.js", "express middleware"],
+  "description": "Get up and running quickly with Express.js and the Shopify API.",
+  "keywords": [
+    "shopify",
+    "express.js",
+    "express middleware"
+  ],
   "bugs": "https://github.com/Shopify/shopify-express/issues",
   "license": "MIT",
   "repository": {
@@ -15,15 +18,15 @@
     "node": ">=8.1.0"
   },
   "scripts": {
-    "prettier:check":
-      "prettier-check --single-quote --trailing-comma=all {middleware,routes,shopStore}{/*,/**/*}.{js,json}",
-    "prettier:fix":
-      "prettier --single-quote --trailing-comma=all --write {middleware,routes,shopStore}{/*,/**/*}.{js,json}",
+    "prettier:check": "prettier-check --single-quote --trailing-comma=all {middleware,routes,shopStore}{/*,/**/*}.{js}",
+    "prettier:fix": "prettier --single-quote --trailing-comma=all --write {middleware,routes,shopStore}{/*,/**/*}.{js}",
     "precommit": "lint-staged",
     "test": "jest"
   },
   "lint-staged": {
-    "*.{js,json}": ["prettier:check"]
+    "*.{js}": [
+      "prettier:check"
+    ]
   },
   "dependencies": {
     "body-parser": "^1.18.2",
