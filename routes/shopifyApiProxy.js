@@ -4,6 +4,7 @@ const DISALLOWED_URLS = [
   '/application_charges',
   '/application_credits',
   '/carrier_services',
+  '/fulfillment_services',
   '/recurring_application_charges',
   '/script_tags',
   '/storefront_access_token',
