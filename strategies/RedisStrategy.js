@@ -1,8 +1,8 @@
 const Redis = require('redis');
 
 module.exports = class RedisStrategy {
-  constructor() {
-    this.client = Redis.createClient();
+  constructor(redisConfig) {
+    this.client = Redis.createClient(redisConfig);
   }
 
   storeShop({ shop, accessToken, data = {} }, done) {

@@ -62,30 +62,72 @@ endpoints from a client application without having to worry about CORS.
 
 By default the package comes with `MemoryStrategy`, `RedisStrategy`, and `SqliteStrategy`. If none are specified, the default is `MemoryStrategy`.
 
-You can use them in a config like so:
+#### MemoryStrategy
+
+Simple javascript object based memory store for development purposes. Do not use this in production!
+
+```javascript
+const shopifyExpress = require('@shopify/shopify-express');
+const {MemoryStrategy} = require('@shopify/shopify-express/strategies');
+
+const shopify = shopifyExpress({
+  shopStore: new MemoryStrategy(redisConfig),
+  ...restOfConfig,
+});
+```
+
+#### RedisStrategy
+
+Uses [redis](https://www.npmjs.com/package/redis) under the hood, so you can pass it any configuration that's valid for the library.
 
 ```javascript
 const shopifyExpress = require('@shopify/shopify-express');
 const {RedisStrategy} = require('@shopify/shopify-express/strategies');
 
+const redisConfig = {
+  // your config here
+};
+
 const shopify = shopifyExpress({
-  shopStore: new RedisStrategy(),
+  shopStore: new RedisStrategy(redisConfig),
   ...restOfConfig,
 });
 ```
 
-### Custom Strategy
+#### SQLStrategy
 
-`shopifyExpress` takes a `shopStore` parameter. This can be any javascript class matching the following interface:
+Uses [knex](https://www.npmjs.com/package/knex) under the hood, so you can pass it any configuration that's valid for the library. By default it uses `sqlite3` so you'll need to run `yarn add sqlite3` to use it. Knex also supports `postgreSQL` and `mySQL`.
+
+```javascript
+const shopifyExpress = require('@shopify/shopify-express');
+const {SQLStrategy} = require('@shopify/shopify-express/strategies');
+
+// uses sqlite3 if no settings are specified
+const knexConfig = {
+  // your config here
+};
+
+const shopify = shopifyExpress({
+  shopStore: new SQLStrategy(knexConfig),
+  ...restOfConfig,
+});
+```
+
+SQLStrategy expects a table named `shops` with a primary key `id`, and `string` fields for `shop_domain` and `access_token`. It's recommended you index `shop_domain` since it is used to look up tokens.
+
+If you do not have a table already created for your store, you can generate one with `new SQLStrategy(myConfig).initialize()`. This returns a promise so you can finish setting up your app after it if you like, but we suggest you make a separate db initialization script, or keep track of your schema yourself.
+
+#### Custom Strategy
+
+`shopifyExpress` accepts any javascript class matching the following interface:
 
 ```javascript
   class Strategy {
-    constructor(){}
     // shop refers to the shop's domain name
-    getShop({ shop }, done)){}
+    getShop({ shop }, done))
     // shop refers to the shop's domain name
     // data can by any serializable object
-    storeShop({ shop, accessToken, data }, done){}
+    storeShop({ shop, accessToken, data }, done)
   }
 ```
 

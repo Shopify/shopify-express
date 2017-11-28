@@ -6,9 +6,7 @@ module.exports = class MemoryStrategy {
   storeShop({ shop, accessToken, data = {} }, done) {
     this.store[shop] = Object.assign(
       {},
-      {
-        accessToken,
-      },
+      { accessToken },
       data
     );
 
