@@ -18,7 +18,7 @@
     "prettier:check":
       "prettier-check --single-quote --trailing-comma=all {middleware,routes,shopStore}{/*,/**/*}.{js,json}",
     "prettier:fix":
-      "prettier --single-quote --trailing-comma --write {middleware,routes,shopStore}{/*,/**/*}.{js,json}",
+      "prettier --single-quote --trailing-comma=all --write {middleware,routes,shopStore}{/*,/**/*}.{js,json}",
     "precommit": "lint-staged",
     "test": "jest"
   },

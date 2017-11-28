@@ -22,7 +22,9 @@ module.exports = function createShopifyAuthRouter({
     }
 
     const redirectTo = `https://${shop}/admin/oauth/authorize`;
-    const redirectParams = `?client_id=${apiKey}&scope=${scope}&redirect_uri=${host}/auth/shopify/callback`;
+    const redirectParams =
+      `?client_id=${apiKey}&scope=${scope}&redirect_uri=${host}` +
+      '/auth/shopify/callback';
 
     response.send(
       `<!DOCTYPE html>
@@ -32,7 +34,7 @@ module.exports = function createShopifyAuthRouter({
             window.top.location.href = "${redirectTo}${redirectParams}"
           </script>
         </head>
-      </html>`
+      </html>`,
     );
   });
 
