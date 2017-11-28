@@ -1,6 +1,16 @@
 const { URL } = require('url');
 
-const ALLOWED_URLS = ['/products', '/orders'];
+const DISALLOWED_URLS = [
+  '/application_charges',
+  '/application_credits',
+  '/carrier_services',
+  '/fulfillment_services',
+  '/recurring_application_charges',
+  '/script_tags',
+  '/storefront_access_token',
+  '/webhooks',
+  '/oauth',
+];
 
 module.exports = function shopifyApiProxy(request, response, next) {
   const { query, method, path, body, session } = request;
@@ -33,8 +43,8 @@ module.exports = function shopifyApiProxy(request, response, next) {
 function validRequest(path) {
   const strippedPath = path.split('?')[0].split('.json')[0];
 
-  return ALLOWED_URLS.some(resource => {
-    return strippedPath === resource;
+  return DISALLOWED_URLS.every(resource => {
+    return strippedPath.indexOf(resource) === -1;
   });
 }
 
