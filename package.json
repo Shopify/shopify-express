@@ -23,7 +23,7 @@
     "test": "jest"
   },
   "lint-staged": {
-    "*.{js,json}": ["prettier-check --single-quote --trailing-comma=all"]
+    "*.{js,json}": ["prettier:check"]
   },
   "dependencies": {
     "body-parser": "^1.18.2",
