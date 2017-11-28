@@ -71,7 +71,7 @@ const shopifyExpress = require('@shopify/shopify-express');
 const {MemoryStrategy} = require('@shopify/shopify-express/strategies');
 
 const shopify = shopifyExpress({
-  shopStore: new RedisStrategy(redisConfig),
+  shopStore: new MemoryStrategy(redisConfig),
   ...restOfConfig,
 });
 ```
@@ -122,12 +122,12 @@ If you do not have a table already created for your store, you can generate one 
 `shopifyExpress` accepts any javascript class matching the following interface:
 
 ```javascript
-  interface Strategy {
+  class Strategy {
     // shop refers to the shop's domain name
-    getShop({ shop }, done)): void
+    getShop({ shop }, done))
     // shop refers to the shop's domain name
     // data can by any serializable object
-    storeShop({ shop, accessToken, data }, done): void
+    storeShop({ shop, accessToken, data }, done)
   }
 ```
 
