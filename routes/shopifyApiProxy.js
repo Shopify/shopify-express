@@ -1,4 +1,5 @@
 const { URL } = require('url');
+const request = require('axios');
 
 const DISALLOWED_URLS = [
   '/application_charges',
@@ -12,32 +13,30 @@ const DISALLOWED_URLS = [
   '/oauth',
 ];
 
-module.exports = function shopifyApiProxy(request, response, next) {
-  const { query, method, path, body, session } = request;
+module.exports = async function shopifyApiProxy(incomingRequest, response, next) {
+  const { query, method, path, body, session } = incomingRequest;
   const { shop, accessToken } = session;
 
   if (!validRequest(path)) {
     return response.status(403).send('Endpoint not in whitelist');
   }
 
-  const fetchOptions = {
-    method,
-    body,
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Access-Token': accessToken,
-    },
-  };
+  try {
+    const { status, data } = await sendRequest({
+      method,
+      url: `https://${shop}/admin${path}`,
+      data: body,
+      params: query,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Access-Token': accessToken,
+      },
+    });
 
-  fetchWithParams(`https://${shop}/admin${path}`, fetchOptions, query)
-    .then(remoteResponse => {
-      const { status } = remoteResponse;
-      return Promise.all([remoteResponse.json(), status]);
-    })
-    .then(([responseBody, status]) => {
-      response.status(status).send(responseBody);
-    })
-    .catch(err => response.err(err));
+    response.status(status).send(data);
+  } catch (error) {
+    response.status(500).send(error);
+  }
 };
 
 function validRequest(path) {
@@ -46,14 +45,4 @@ function validRequest(path) {
   return DISALLOWED_URLS.every(resource => {
     return strippedPath.indexOf(resource) === -1;
   });
-}
-
-function fetchWithParams(url, fetchOpts, query) {
-  const parsedUrl = new URL(url);
-
-  Object.entries(query).forEach(([key, value]) => {
-    parsedUrl.searchParams.append(key, value);
-  });
-
-  return fetch(parsedUrl.href, fetchOpts);
 }
