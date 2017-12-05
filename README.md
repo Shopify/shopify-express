@@ -145,7 +145,7 @@ Express middleware that validates the presence of your shop session.
 
 `app.use('/someProtectedPath', withWebhook, someHandler);`
 
-Express middleware that validates the the presence of a valid HMAC signature to allow webhook requests from shopify to your app.
+Express middleware that validates the presence of a valid HMAC signature to allow webhook requests from shopify to your app.
 
 ## Example app
 
