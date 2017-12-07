@@ -1,5 +1,5 @@
-const { URL } = require('url');
-const request = require('axios');
+const querystring = require('querystring');
+const fetch = require('node-fetch');
 
 const DISALLOWED_URLS = [
   '/application_charges',
@@ -14,30 +14,38 @@ const DISALLOWED_URLS = [
 ];
 
 module.exports = async function shopifyApiProxy(incomingRequest, response, next) {
-  const { query, method, path, body, session } = incomingRequest;
+  const { query, method, path: pathname, body, session } = incomingRequest;
   const { shop, accessToken } = session;
 
-  if (!validRequest(path)) {
+  if (!validRequest(pathname)) {
     return response.status(403).send('Endpoint not in whitelist');
   }
 
   try {
-    const { status, data } = await sendRequest({
+    const searchParams = querystring.stringify(query);
+    const searchString = searchParams.length > 0
+      ? `?${searchParams}`
+      : '';
+
+    const url = `https://${shop}/admin${pathname}${searchString}`;
+    const result = await fetch(url, {
       method,
-      url: `https://${shop}/admin${path}`,
-      data: body,
-      params: query,
+      body,
       headers: {
         'Content-Type': 'application/json',
         'X-Shopify-Access-Token': accessToken,
       },
     });
 
-    response.status(status).send(data);
+    const data = await result.text();
+    response.status(result.status).send(data);
   } catch (error) {
+    console.log(error);
     response.status(500).send(error);
   }
 };
+
+module.exports.DISALLOWED_URLS = DISALLOWED_URLS;
 
 function validRequest(path) {
   const strippedPath = path.split('?')[0].split('.json')[0];
