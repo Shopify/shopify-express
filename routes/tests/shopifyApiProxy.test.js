@@ -16,7 +16,7 @@ let session;
 let server;
 describe('shopifyApiProxy', async () => {
   beforeEach(async () => {
-    fetchMock.mockImplementation(() => ({ status: 200, text: () => Promise.resolve(':)') }));
+    fetchMock.mockImplementation(() => ({ status: 200, text: () => Promise.resolve() }));
 
     session = {
       shop: 'shop.com',
