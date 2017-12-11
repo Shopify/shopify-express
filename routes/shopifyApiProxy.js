@@ -1,4 +1,5 @@
-const { URL } = require('url');
+const querystring = require('querystring');
+const fetch = require('node-fetch');
 
 const DISALLOWED_URLS = [
   '/application_charges',
@@ -12,33 +13,39 @@ const DISALLOWED_URLS = [
   '/oauth',
 ];
 
-module.exports = function shopifyApiProxy(request, response, next) {
-  const { query, method, path, body, session } = request;
+module.exports = async function shopifyApiProxy(incomingRequest, response, next) {
+  const { query, method, path: pathname, body, session } = incomingRequest;
   const { shop, accessToken } = session;
 
-  if (!validRequest(path)) {
+  if (!validRequest(pathname)) {
     return response.status(403).send('Endpoint not in whitelist');
   }
 
-  const fetchOptions = {
-    method,
-    body,
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Access-Token': accessToken,
-    },
-  };
+  try {
+    const searchParams = querystring.stringify(query);
+    const searchString = searchParams.length > 0
+      ? `?${searchParams}`
+      : '';
 
-  fetchWithParams(`https://${shop}/admin${path}`, fetchOptions, query)
-    .then(remoteResponse => {
-      const { status } = remoteResponse;
-      return Promise.all([remoteResponse.json(), status]);
-    })
-    .then(([responseBody, status]) => {
-      response.status(status).send(responseBody);
-    })
-    .catch(err => response.err(err));
+    const url = `https://${shop}/admin${pathname}${searchString}`;
+    const result = await fetch(url, {
+      method,
+      body,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Access-Token': accessToken,
+      },
+    });
+
+    const data = await result.text();
+    response.status(result.status).send(data);
+  } catch (error) {
+    console.log(error);
+    response.status(500).send(error);
+  }
 };
+
+module.exports.DISALLOWED_URLS = DISALLOWED_URLS;
 
 function validRequest(path) {
   const strippedPath = path.split('?')[0].split('.json')[0];
@@ -46,14 +53,4 @@ function validRequest(path) {
   return DISALLOWED_URLS.every(resource => {
     return strippedPath.indexOf(resource) === -1;
   });
-}
-
-function fetchWithParams(url, fetchOpts, query) {
-  const parsedUrl = new URL(url);
-
-  Object.entries(query).forEach(([key, value]) => {
-    parsedUrl.searchParams.append(key, value);
-  });
-
-  return fetch(parsedUrl.href, fetchOpts);
 }

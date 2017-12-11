@@ -1,44 +1,46 @@
-const request = require('supertest');
+const fetch = require('node-fetch');
 const http = require('http');
 const express = require('express');
 
 const { MemoryStrategy } = require('../../strategies');
 const createShopifyAuthRouter = require('../shopifyAuth');
 
+const PORT = 3000;
+const BASE_URL = `http://localhost:${PORT}`
+
 let server;
+let afterAuthSpy;
 describe('shopifyAuth', async () => {
+  beforeEach(async () => {
+    afterAuthSpy = jest.fn();
+
+    server = await createServer(afterAuthSpy);
+  });
+
   afterEach(() => {
     server.close();
   });
 
   describe('/', () => {
     it('responds to get requests by returning a redirect page', async () => {
-      const { app, server } = await createServer();
-      const { status, text } = await request(app)
-        .get('/?shop=shop1')
-        .then(resp => resp);
+      const response = await fetch(`${BASE_URL}/?shop=shop1`);
+      const data = await response.text();
 
-      expect(status).toBe(200);
-      expect(text).toMatchSnapshot();
-
-      server.close();
+      expect(response.status).toBe(200);
+      expect(data).toMatchSnapshot();
     });
 
     it('responds with a 400 when no shop query parameter is given', async () => {
-      const { app, server } = await createServer();
-      const { status, text } = await request(app)
-        .get('/')
-        .then(resp => resp);
+      const response = await fetch(BASE_URL);
+      const data = await response.text();
 
-      expect(status).toBe(400);
-      expect(text).toMatchSnapshot();
-
-      server.close();
+      expect(response.status).toBe(400);
+      expect(data).toMatchSnapshot();
     });
   });
 });
 
-function createServer({ afterAuth = jest.fn() } = {}) {
+function createServer(afterAuth) {
   const app = express();
 
   app.use(
@@ -55,11 +57,6 @@ function createServer({ afterAuth = jest.fn() } = {}) {
   server = http.createServer(app);
 
   return new Promise((resolve, reject) => {
-    const results = {
-      server,
-      app,
-      afterAuth,
-    };
-    server.listen(3000, resolve(results));
+    server.listen(PORT, resolve(server));
   });
 }
