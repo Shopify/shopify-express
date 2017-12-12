@@ -8,8 +8,8 @@ module.exports = function createWithWebhook({ secret, shopStore }) {
     const shopDomain = request.get('X-Shopify-Shop-Domain');
 
     const generated_hash = crypto
-      .createHmac('sha256', SHOPIFY_APP_SECRET)
-      .update(JSON.stringify(data))
+      .createHmac('sha256', secret)
+      .update(data)
       .digest('base64');
 
     if (generated_hash !== hmac) {
