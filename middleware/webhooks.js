@@ -1,29 +1,44 @@
 const crypto = require('crypto');
+const getRawBody = require('raw-body');
 
-module.exports = function createWithWebhook({ secret, shopStore }) {
-  return function withWebhook(request, response, next) {
-    const { body: data } = request;
-    const hmac = request.get('X-Shopify-Hmac-Sha256');
-    const topic = request.get('X-Shopify-Topic');
-    const shopDomain = request.get('X-Shopify-Shop-Domain');
+module.exports = function configureWithWebhook({ secret, shopStore }) {
+  return function createWebhookHandler(onVerified) {
+    return async function withWebhook(request, response) {
+      const { body: data } = request;
+      const hmac = request.get('X-Shopify-Hmac-Sha256');
+      const topic = request.get('X-Shopify-Topic');
+      const shopDomain = request.get('X-Shopify-Shop-Domain');
 
-    const generated_hash = crypto
-      .createHmac('sha256', secret)
-      .update(data)
-      .digest('base64');
+      try {
+        const rawBody = await getRawBody(request);
+        const generated_hash = crypto
+          .createHmac('sha256', secret)
+          .update(rawBody)
+          .digest('base64');
 
-    if (generated_hash !== hmac) {
-      return response.status(401).send("Request doesn't pass HMAC validation");
-    }
+        if (generated_hash !== hmac) {
+          response.status(401).send();
+          onVerified(new Error("Unable to verify request HMAC"));
+          return;
+        }
 
-    shopStore.getShop({ shop: shopDomain }, (error, { accessToken }) => {
-      if (error) {
-        next(error);
+        shopStore.getShop({ shop: shopDomain }, (error, { accessToken }) => {
+          if (error) {
+            response.status(401).send();
+            onVerified(new Error("Couldn't fetch credentials for shop"));
+            return;
+          }
+
+          request.body = rawBody.toString('utf8');
+          request.webhook = { topic, shopDomain, accessToken };
+
+          response.status(200).send();
+
+          onVerified(null, request);
+        });
+      } catch(error) {
+        response.send(error);
       }
-
-      request.webhook = { topic, shopDomain, accessToken };
-
-      next();
-    });
-  };
+    };
+  }
 };
