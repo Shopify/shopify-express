@@ -37,7 +37,8 @@
     "node-fetch": "^1.7.3",
     "redis": "^2.7.1",
     "sqlite3": "^3.1.9",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "raw-body": "^2.3.2"
   },
   "devDependencies": {
     "husky": "^0.14.3",
