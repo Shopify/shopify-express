@@ -6,19 +6,19 @@ const { MemoryStrategy } = require('../../strategies');
 const createShopifyAuthRouter = require('../shopifyAuth');
 
 const PORT = 3000;
-const BASE_URL = `http://localhost:${PORT}`
+const BASE_URL = `http://127.0.0.1:${PORT}`
 
-let server;
-let afterAuthSpy;
 describe('shopifyAuth', async () => {
+  let server;
+  let afterAuthSpy;
   beforeEach(async () => {
     afterAuthSpy = jest.fn();
 
     server = await createServer(afterAuthSpy);
   });
 
-  afterEach(() => {
-    server.close();
+  afterEach((done) => {
+    server.close(done);
   });
 
   describe('/', () => {

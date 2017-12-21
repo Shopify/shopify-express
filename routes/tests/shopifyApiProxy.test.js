@@ -7,14 +7,14 @@ const shopifyApiProxy = require('../shopifyApiProxy');
 
 const { DISALLOWED_URLS } = shopifyApiProxy;
 const PORT = 3000;
-const BASE_URL = `http://localhost:${PORT}`;
+const BASE_URL = `http://127.0.0.1:${PORT}`;
 const API_ROUTE = '/api';
 
 jest.mock('node-fetch');
 
-let session;
-let server;
 describe('shopifyApiProxy', async () => {
+  let session;
+  let server;
   beforeEach(async () => {
     fetchMock.mockImplementation(() => ({ status: 200, text: () => Promise.resolve() }));
 
@@ -26,9 +26,9 @@ describe('shopifyApiProxy', async () => {
     server = await createServer();
   });
 
-  afterEach(() => {
+  afterEach((done) => {
     fetchMock.mockClear();
-    server.close();
+    server.close(done);
   });
 
   it('proxies requests to the shop given in session', async () => {
