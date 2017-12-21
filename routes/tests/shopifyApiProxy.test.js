@@ -26,9 +26,9 @@ describe('shopifyApiProxy', async () => {
     server = await createServer();
   });
 
-  afterEach(() => {
+  afterEach((done) => {
     fetchMock.mockClear();
-    server.close();
+    server.close(done);
   });
 
   it('proxies requests to the shop given in session', async () => {

@@ -17,8 +17,8 @@ describe('shopifyAuth', async () => {
     server = await createServer(afterAuthSpy);
   });
 
-  afterEach(() => {
-    server.close();
+  afterEach((done) => {
+    server.close(done);
   });
 
   describe('/', () => {
