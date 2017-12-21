@@ -12,9 +12,9 @@ const API_ROUTE = '/api';
 
 jest.mock('node-fetch');
 
-let session;
-let server;
 describe('shopifyApiProxy', async () => {
+  let session;
+  let server;
   beforeEach(async () => {
     fetchMock.mockImplementation(() => ({ status: 200, text: () => Promise.resolve() }));
 
