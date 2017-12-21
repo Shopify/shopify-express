@@ -6,7 +6,7 @@ const { MemoryStrategy } = require('../../strategies');
 const createShopifyAuthRouter = require('../shopifyAuth');
 
 const PORT = 3000;
-const BASE_URL = `http://localhost:${PORT}`
+const BASE_URL = `http://127.0.0.1:${PORT}`
 
 let server;
 let afterAuthSpy;

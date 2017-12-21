@@ -7,7 +7,7 @@ const shopifyApiProxy = require('../shopifyApiProxy');
 
 const { DISALLOWED_URLS } = shopifyApiProxy;
 const PORT = 3000;
-const BASE_URL = `http://localhost:${PORT}`;
+const BASE_URL = `http://127.0.0.1:${PORT}`;
 const API_ROUTE = '/api';
 
 jest.mock('node-fetch');
