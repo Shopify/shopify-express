@@ -1,3 +1,4 @@
+const findFreePort = require('find-free-port')
 const fetch = require('node-fetch');
 const http = require('http');
 const express = require('express');
@@ -57,6 +58,11 @@ function createServer(afterAuth) {
   server = http.createServer(app);
 
   return new Promise((resolve, reject) => {
-    server.listen(PORT, resolve(server));
+    findFreePort(PORT, (err, freePort) => {
+      if (err) {
+        throw err;
+      }
+      server.listen(PORT, resolve(server));
+    })
   });
 }

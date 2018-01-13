@@ -21,7 +21,8 @@
     "prettier:check": "prettier-check --single-quote --trailing-comma=all {middleware,routes,shopStore}{/*,/**/*}.{js}",
     "prettier:fix": "prettier --single-quote --trailing-comma=all --write {middleware,routes,shopStore}{/*,/**/*}.{js}",
     "precommit": "lint-staged",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest --ci"
   },
   "lint-staged": {
     "*.{js}": [
@@ -41,6 +42,7 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
+    "find-free-port": "^1.1.0",
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "lint-staged": "^5.0.0",
