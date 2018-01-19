@@ -25,6 +25,12 @@ const shopify = shopifyExpress({
   apiKey: SHOPIFY_APP_KEY,
   secret: SHOPIFY_APP_SECRET,
   scope: ['write_orders, write_products'],
+  session: {
+    secret: SHOPIFY_APP_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: true }
+  }
   afterAuth(request, response) {
     const { session: { accessToken, shop } } = request;
     // install webhooks or hook into your own app here
