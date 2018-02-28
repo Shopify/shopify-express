@@ -113,7 +113,7 @@ const shopify = shopifyExpress({
 });
 ```
 
-SQLStrategy expects a table named `shops` with a primary key `id`, and `string` fields for `shop_domain` and `access_token`. It's recommended you index `shop_domain` since it is used to look up tokens.
+SQLStrategy expects a table named `shops` with a primary key `id`, and `string` fields for `shopify_domain` and `access_token`. It's recommended you index `shopify_domain` since it is used to look up tokens.
 
 If you do not have a table already created for your store, you can generate one with `new SQLStrategy(myConfig).initialize()`. This returns a promise so you can finish setting up your app after it if you like, but we suggest you make a separate db initialization script, or keep track of your schema yourself.
 
