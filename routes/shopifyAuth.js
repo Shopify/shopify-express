@@ -1,6 +1,7 @@
 const express = require('express');
 const querystring = require('querystring');
 const crypto = require('crypto');
+const fetch = require('node-fetch');
 
 module.exports = function createShopifyAuthRouter({
   host,
