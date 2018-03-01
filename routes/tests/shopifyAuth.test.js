@@ -39,6 +39,24 @@ describe('shopifyAuth', async () => {
       expect(data).toMatchSnapshot();
     });
   });
+
+  describe('/callback', () => {
+    it('errors when hmac validation fails', () => {
+      pending();
+    });
+
+    it('does not error when hmac validation succeds', () => {
+      pending();
+    });
+
+    it('requests access token', () => {
+      pending();
+    });
+
+    it('console warns when no session is present on request context', () => {
+      pending();
+    });
+  });
 });
 
 function createServer(afterAuth) {
