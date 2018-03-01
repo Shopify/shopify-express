@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`shopifyAuth / responds to get requests by returning a redirect page 1`] = `
+exports[`createAuth / responds to get requests by returning a redirect page 1`] = `
 "<!DOCTYPE html>
       <html>
         <head>
@@ -11,4 +11,4 @@ exports[`shopifyAuth / responds to get requests by returning a redirect page 1`]
       </html>"
 `;
 
-exports[`shopifyAuth / responds with a 400 when no shop query parameter is given 1`] = `"Expected a shop query parameter"`;
+exports[`createAuth / responds with a 400 when no shop query parameter is given 1`] = `"Expected a shop query parameter"`;

@@ -1,12 +1,7 @@
-const createWithWebhook = require('./webhooks');
-const createWithShop = require('./withShop');
+const createVerifyWebhook = require('./createVerifyWebhook');
+const createVerifyAuth = require('./createVerifyAuth');
 
-module.exports = function createMiddleware(shopifyConfig) {
-  const withWebhook = createWithWebhook(shopifyConfig);
-  const withShop = createWithShop();
-
-  return {
-    withShop,
-    withWebhook,
-  };
-};
+module.exports = {
+  createVerifyWebhook,
+  createVerifyAuth,
+}

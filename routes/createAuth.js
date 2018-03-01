@@ -1,16 +1,36 @@
+const PropTypes =  require('prop-types');
 const express = require('express');
 const querystring = require('querystring');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
 
-module.exports = function createShopifyAuthRouter({
-  host,
-  apiKey,
-  secret,
-  scope,
-  afterAuth,
-  shopStore,
-}) {
+const propTypes = {
+  apiKey: PropTypes.string.isRequired,
+  host: PropTypes.string.isRequired,
+  secret: PropTypes.string.isRequired,
+  scope: PropTypes.arrayOf(PropTypes.string).isRequired,
+  afterAuth: PropTypes.func.isRequired,
+  shopStore: PropTypes.Object,
+};
+
+module.exports = function createShopifyAuthRouter(authConfig) {
+  PropTypes.checkPropTypes(ShopifyConfigTypes, propTypes, 'option', 'ShopifyExpress');
+
+  const config = Object.assign(
+    {shopStore: new MemoryStrategy()},
+    authConfig,
+  );
+
+  const {
+    host,
+    apiKey,
+    secret,
+    scope,
+    afterAuth,
+    shopStore,
+    callbackRoute,
+  } = config;
+
   const router = express.Router();
 
   // This function initializes the Shopify OAuth Process
@@ -25,7 +45,7 @@ module.exports = function createShopifyAuthRouter({
     const redirectTo = `https://${shop}/admin/oauth/authorize`;
     const redirectParams =
       `?client_id=${apiKey}&scope=${scope}&redirect_uri=${host}` +
-      '/auth/shopify/callback';
+      callbackRoute;
 
     response.send(
       `<!DOCTYPE html>

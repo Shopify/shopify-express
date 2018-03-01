@@ -1,21 +1,7 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const apiProxy = require('./apiProxy');
+const createAuth = require('./createAuth');
 
-const createWithShop = require('../middleware/withShop');
-const createShopifyAuthRouter = require('./shopifyAuth');
-const shopifyApiProxy = require('./shopifyApiProxy');
-
-module.exports = function createRouter(shopifyConfig) {
-  const router = express.Router();
-  const rawParser = bodyParser.raw({ type: '*/*' });
-
-  router.use('/auth/shopify', createShopifyAuthRouter(shopifyConfig));
-  router.use(
-    '/api',
-    rawParser,
-    createWithShop({ redirect: false }),
-    shopifyApiProxy,
-  );
-
-  return router;
-};
+module.exports = {
+  apiProxy,
+  createAuth,
+}

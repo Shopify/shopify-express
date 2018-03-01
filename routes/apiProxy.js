@@ -1,5 +1,9 @@
+const {compose} = require('compose-middleware');
 const querystring = require('querystring');
 const fetch = require('node-fetch');
+const bodyParser = require('body-parser');
+
+const {createVerifyAuth} = require('../middleware');
 
 const DISALLOWED_URLS = [
   '/application_charges',
@@ -13,7 +17,7 @@ const DISALLOWED_URLS = [
   '/oauth',
 ];
 
-module.exports = async function shopifyApiProxy(incomingRequest, response, next) {
+async function apiProxy(incomingRequest, response, next) {
   const { query, method, path: pathname, body, session } = incomingRequest;
 
   if (session == null) {
@@ -57,6 +61,16 @@ module.exports = async function shopifyApiProxy(incomingRequest, response, next)
     response.status(500).send(error);
   }
 };
+
+module.exports = compose(
+  createVerifyAuth({
+    onFail(_request, response) {
+       response.redirect('/install');
+    },
+  }),
+  bodyParser.raw({ type: '*/*' }),
+  apiProxy,
+);
 
 module.exports.DISALLOWED_URLS = DISALLOWED_URLS;
 

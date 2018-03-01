@@ -1,9 +1,16 @@
 const crypto = require('crypto');
 const getRawBody = require('raw-body');
 
-module.exports = function configureWithWebhook({ secret, shopStore }) {
-  return function createWebhookHandler(onVerified) {
-    return async function withWebhook(request, response) {
+const propTypes = {
+  secret: PropTypes.string.isRequired,
+  shopStore: PropTypes.Object,
+};
+
+module.exports = function createVerifyWebhook({ secret, shopStore }) {
+  PropTypes.checkPropTypes(ShopifyConfigTypes, propTypes, 'option', 'ShopifyExpress');
+
+  return function createWrappedFunction(onVerified) {
+    return async function webhookHandler(request, response) {
       const { body: data } = request;
       const hmac = request.get('X-Shopify-Hmac-Sha256');
       const topic = request.get('X-Shopify-Topic');
