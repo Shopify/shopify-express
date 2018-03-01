@@ -1,13 +1,15 @@
+const PropTypes = require('prop-types');
 const crypto = require('crypto');
 const getRawBody = require('raw-body');
 
 const propTypes = {
   secret: PropTypes.string.isRequired,
-  shopStore: PropTypes.Object,
+  shopStore: PropTypes.object,
 };
 
-module.exports = function createVerifyWebhook({ secret, shopStore }) {
-  PropTypes.checkPropTypes(ShopifyConfigTypes, propTypes, 'option', 'ShopifyExpress');
+module.exports = function createVerifyWebhook(config) {
+  PropTypes.checkPropTypes(propTypes, config, 'option', 'ShopifyExpress');
+  const { secret, shopStore } = config;
 
   return function createWrappedFunction(onVerified) {
     return async function webhookHandler(request, response) {
