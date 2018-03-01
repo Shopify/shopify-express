@@ -32,6 +32,20 @@ describe('shopifyApiProxy', async () => {
     server.close();
   });
 
+  it('errors when shop information is not in session', async () => {
+    const shop = 'some-shop.com';
+    const endpoint = '/products';
+    session.shop = null;
+    session.accessToken = null;
+
+    const expectedPath = `https://${shop}/admin${endpoint}`;
+    const response = await fetch(`${BASE_URL}${API_ROUTE}${endpoint}`);
+
+    expect(fetchMock).not.toBeCalled();
+    expect(response.status).toBe(401);
+  });
+
+
   it('proxies requests to the shop given in session', async () => {
     const shop = 'some-shop.com';
     const endpoint = '/products';
