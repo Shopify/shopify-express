@@ -10,6 +10,7 @@ A small set of abstractions that will help you quickly build an Express.js app t
 ```javascript
 const express = require('express');
 const shopifyExpress = require('@shopify/shopify-express');
+const session = require('express-session');
 
 const app = express();
 
@@ -19,6 +20,9 @@ const {
   SHOPIFY_APP_SECRET,
   NODE_ENV,
 } = process.env;
+
+// session is necessary for api proxy and auth verification
+app.use(session({secret: SHOPIFY_APP_SECRET}));
 
 const shopify = shopifyExpress({
   host: SHOPIFY_APP_HOST,
@@ -150,6 +154,35 @@ Express middleware that validates the presence of a valid HMAC signature to allo
 ## Example app
 
 You can look at [shopify-node-app](https://github.com/shopify/shopify-node-app) for a complete working example.
+
+
+## Gotchas
+
+### Express Session
+This library expects [express-session](https://www.npmjs.com/package/express-session) or a compatible library to be installed and set up for much of it's functionality. Api Proxy and auth verification functions won't work without something putting a `session` key on `request`.
+
+It is possible to use auth without a session key on your request, but not recommended.
+
+### Body Parser
+This library handles body parsing on it's own for webhooks. If you're using webhooks you should make sure to follow express best-practices by only adding your body parsing middleware to specific routes that need it.
+
+**Good**
+```
+  app.use('/some-route', bodyParser.json(), myHandler);
+
+  app.use('/webhook', withWebhook(myWebhookHandler));
+  app.use('/', shopifyExpress.routes);
+```
+
+**Bad**
+```
+  app.use(bodyParser.json());
+  app.use('/some-route', myHandler);
+
+  app.use('/webhook', withWebhook(myWebhookHandler));
+  app.use('/', shopifyExpress.routes);
+```
+
 
 ## Contributing
 

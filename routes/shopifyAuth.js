@@ -42,7 +42,7 @@ module.exports = function createShopifyAuthRouter({
   // Users are redirected here after clicking `Install`.
   // The redirect from Shopify contains the authorization_code query parameter,
   // which the app exchanges for an access token
-  router.get('/callback', (request, response) => {
+  router.get('/callback', async (request, response) => {
     const { query } = request;
     const { code, hmac, shop } = query;
 
@@ -70,28 +70,33 @@ module.exports = function createShopifyAuthRouter({
       client_secret: secret,
     });
 
-    fetch(`https://${shop}/admin/oauth/access_token`, {
+    const remoteResponse = await fetch(`https://${shop}/admin/oauth/access_token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': Buffer.byteLength(requestBody),
       },
       body: requestBody,
-    })
-      .then(remoteResponse => remoteResponse.json())
-      .then(responseBody => {
-        const accessToken = responseBody.access_token;
+    });
 
-        shopStore.storeShop({ accessToken, shop }, (err, token) => {
-          if (err) {
-            console.error('🔴 Error storing shop access token', err);
-          }
+    const responseBody = await remoteResponse.json();
 
-          request.session.accessToken = accessToken;
-          request.session.shop = shop;
-          afterAuth(request, response);
-        });
-      });
+    const accessToken = responseBody.access_token;
+
+    shopStore.storeShop({ accessToken, shop }, (err, token) => {
+      if (err) {
+        console.error('🔴 Error storing shop access token', err);
+      }
+
+      if (request.session) {
+        request.session.accessToken = accessToken;
+        request.session.shop = shop;
+      } else {
+        console.warn('Session not present on request, please install a session middleware.');
+      }
+
+      afterAuth(request, response);
+    });
   });
 
   return router;

@@ -15,10 +15,23 @@ const DISALLOWED_URLS = [
 
 module.exports = async function shopifyApiProxy(incomingRequest, response, next) {
   const { query, method, path: pathname, body, session } = incomingRequest;
+
+  if (session == null) {
+    console.error('A session middleware must be installed to use ApiProxy.')
+    response.status(401).send(new Error('Unauthorized'));
+    return;
+  }
+
   const { shop, accessToken } = session;
 
+  if (shop == null || accessToken == null) {
+    response.status(401).send(new Error('Unauthorized'));
+    return;
+  }
+
   if (!validRequest(pathname)) {
-    return response.status(403).send('Endpoint not in whitelist');
+    response.status(403).send('Endpoint not in whitelist');
+    return;
   }
 
   try {
