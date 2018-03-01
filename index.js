@@ -9,7 +9,7 @@ const ShopifyConfigTypes = {
   secret: PropTypes.string.isRequired,
   scope: PropTypes.arrayOf(PropTypes.string).isRequired,
   afterAuth: PropTypes.func.isRequired,
-  shopStore: PropTypes.Object,
+  shopStore: PropTypes.object,
 };
 
 module.exports = function shopify(shopifyConfig) {
