@@ -15,6 +15,7 @@ jest.mock('node-fetch');
 
 let session;
 let server;
+const originalConsoleError = console.error;
 describe('shopifyApiProxy', async () => {
   beforeEach(async () => {
     fetchMock.mockImplementation(() => ({ status: 200, text: () => Promise.resolve() }));
@@ -25,20 +26,31 @@ describe('shopifyApiProxy', async () => {
     };
 
     server = await createServer();
+    console.error = jest.fn();
   });
 
   afterEach(() => {
     fetchMock.mockClear();
     server.close();
+    console.error = originalConsoleError;
+  });
+
+  it('errors when no session is present', async () => {
+    const endpoint = '/products';
+    session = null;
+
+    const response = await fetch(`${BASE_URL}${API_ROUTE}${endpoint}`);
+
+    expect(fetchMock).not.toBeCalled();
+    expect(console.error).toBeCalledWith('A session middleware must be installed to use ApiProxy.');
+    expect(response.status).toBe(401);
   });
 
   it('errors when shop information is not in session', async () => {
-    const shop = 'some-shop.com';
     const endpoint = '/products';
     session.shop = null;
     session.accessToken = null;
 
-    const expectedPath = `https://${shop}/admin${endpoint}`;
     const response = await fetch(`${BASE_URL}${API_ROUTE}${endpoint}`);
 
     expect(fetchMock).not.toBeCalled();
