@@ -63,11 +63,7 @@ async function apiProxy(incomingRequest, response, next) {
 };
 
 module.exports = compose(
-  createVerifyAuth({
-    onFail(_request, response) {
-       response.redirect('/install');
-    },
-  }),
+  createVerifyAuth(),
   bodyParser.raw({ type: '*/*' }),
   apiProxy,
 );
