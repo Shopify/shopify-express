@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ShopifyConfig logs errors when given bad props 1`] = `
+Array [
+  Array [
+    "Warning: Failed option type: Invalid option \`apiKey\` of type \`number\` supplied to \`ShopifyExpress\`, expected \`string\`.",
+  ],
+  Array [
+    "Warning: Failed option type: Invalid option \`host\` of type \`object\` supplied to \`ShopifyExpress\`, expected \`string\`.",
+  ],
+  Array [
+    "Warning: Failed option type: Invalid option \`secret\` of type \`boolean\` supplied to \`ShopifyExpress\`, expected \`string\`.",
+  ],
+  Array [
+    "Warning: Failed option type: Invalid option \`scope\` of type \`string\` supplied to \`ShopifyExpress\`, expected an array.",
+  ],
+  Array [
+    "Warning: Failed option type: Invalid option \`afterAuth\` of type \`boolean\` supplied to \`ShopifyExpress\`, expected \`function\`.",
+  ],
+]
+`;
+
+exports[`ShopifyConfig logs errors when given empty object 1`] = `
+Array [
+  Array [
+    "Warning: Failed option type: The option \`apiKey\` is marked as required in \`ShopifyExpress\`, but its value is \`undefined\`.",
+  ],
+  Array [
+    "Warning: Failed option type: The option \`host\` is marked as required in \`ShopifyExpress\`, but its value is \`undefined\`.",
+  ],
+  Array [
+    "Warning: Failed option type: The option \`secret\` is marked as required in \`ShopifyExpress\`, but its value is \`undefined\`.",
+  ],
+  Array [
+    "Warning: Failed option type: The option \`scope\` is marked as required in \`ShopifyExpress\`, but its value is \`undefined\`.",
+  ],
+  Array [
+    "Warning: Failed option type: The option \`afterAuth\` is marked as required in \`ShopifyExpress\`, but its value is \`undefined\`.",
+  ],
+  Array [
+    "Warning: Failed option type: ShopifyExpress: option type \`shopStore\` is invalid; it must be a function, usually from the \`prop-types\` package, but received \`undefined\`.",
+  ],
+]
+`;
