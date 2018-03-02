@@ -39,7 +39,7 @@ module.exports = function createShopifyAuthRoutes({
         <html>
           <head>
             <script type="text/javascript">
-              window.top.location.href = "${redirectTo}${querystring.stringify(redirectParams)}"
+              window.top.location.href = "${redirectTo}?${querystring.stringify(redirectParams)}"
             </script>
           </head>
         </html>`,
