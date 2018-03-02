@@ -40,7 +40,7 @@ const {routes, withShop} = shopifyExpress({
 app.use('/shopify', routes);
 
 // shields myAppMiddleware from being accessed without session
-app.use('/myApp', withShop('/shopify'), myAppMiddleware)
+app.use('/myApp', withShop({authBaseUrl: '/shopify'}), myAppMiddleware)
 ```
 
 ## Shopify routes
@@ -144,7 +144,7 @@ If you do not have a table already created for your store, you can generate one 
 
 ### `withShop`
 
-`app.use('/someProtectedPath', withShop('/shopify'), someHandler);`
+`app.use('/someProtectedPath', withShop({authBaseUrl: '/shopify'}), someHandler);`
 
 Express middleware that validates the presence of your shop session. The parameter you pass to it should match the base URL for where you've mounted the shopify routes.
 
