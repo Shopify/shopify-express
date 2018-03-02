@@ -10,12 +10,11 @@ const PORT = 3000;
 const BASE_URL = `http://localhost:${PORT}`
 
 let server;
-let afterAuthSpy;
+let afterAuth;
 describe('shopifyAuth', async () => {
   beforeEach(async () => {
-    afterAuthSpy = jest.fn();
-
-    server = await createServer(afterAuthSpy);
+    afterAuth = jest.fn();
+    server = await createServer({afterAuth});
   });
 
   afterEach(() => {
@@ -29,6 +28,17 @@ describe('shopifyAuth', async () => {
 
       expect(response.status).toBe(200);
       expect(data).toMatchSnapshot();
+    });
+
+    it('redirect page includes per-user grant for accessMode: online', async () => {
+      await server.close();
+      server = await createServer({accessMode: 'online'});
+
+      const response = await fetch(`${BASE_URL}/auth?shop=shop1`);
+      const data = await response.text();
+
+      expect(response.status).toBe(200);
+      expect(data).toContain('grant_options%5B%5D=per-user');
     });
 
     it('responds with a 400 when no shop query parameter is given', async () => {
@@ -59,17 +69,20 @@ describe('shopifyAuth', async () => {
   });
 });
 
-function createServer(afterAuth) {
+function createServer(userConfig = {}) {
   const app = express();
 
-  const {auth, callback} = createShopifyAuthRoutes({
+  const serverConfig = {
     host: 'http://myshop.myshopify.com',
     apiKey: 'key',
     secret: 'secret',
     scope: ['scope'],
     shopStore: new MemoryStrategy(),
-    afterAuth,
-  });
+    accessMode: 'offline',
+    afterAuth: jest.fn(),
+  };
+
+  const {auth, callback} = createShopifyAuthRoutes(Object.assign({}, serverConfig, userConfig));
 
   app.use('/auth', auth);
   app.use('/auth/callback', callback);

@@ -29,6 +29,7 @@ const {routes, withShop} = shopifyExpress({
   apiKey: SHOPIFY_APP_KEY,
   secret: SHOPIFY_APP_SECRET,
   scope: ['write_orders, write_products'],
+  accessMode: 'offline',
   afterAuth(request, response) {
     const { session: { accessToken, shop } } = request;
     // install webhooks or hook into your own app here

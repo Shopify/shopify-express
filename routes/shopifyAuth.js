@@ -9,6 +9,7 @@ module.exports = function createShopifyAuthRoutes({
   scope,
   afterAuth,
   shopStore,
+  accessMode,
 }) {
   return {
     // This function initializes the Shopify OAuth Process
@@ -21,16 +22,24 @@ module.exports = function createShopifyAuthRoutes({
       }
 
       const redirectTo = `https://${shop}/admin/oauth/authorize`;
-      const redirectParams =
-        `?client_id=${apiKey}&scope=${scope}&redirect_uri=${host}` +
-        `${baseUrl}/callback`;
+
+      const redirectParams = {
+        baseUrl,
+        scope,
+        client_id: apiKey,
+        redirect_uri: `${host}${baseUrl}/callback`,
+      };
+
+      if (accessMode === 'online') {
+        redirectParams['grant_options[]'] = 'per-user';
+      }
 
       response.send(
         `<!DOCTYPE html>
         <html>
           <head>
             <script type="text/javascript">
-              window.top.location.href = "${redirectTo}${redirectParams}"
+              window.top.location.href = "${redirectTo}${querystring.stringify(redirectParams)}"
             </script>
           </head>
         </html>`,

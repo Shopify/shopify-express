@@ -10,15 +10,18 @@ const ShopifyConfigTypes = {
   scope: PropTypes.arrayOf(PropTypes.string).isRequired,
   afterAuth: PropTypes.func.isRequired,
   shopStore: PropTypes.object,
+  accessMode: PropTypes.oneOf(['offline', 'online']),
+};
+
+const defaults = {
+  shopStore: new MemoryStrategy(),
+  accessMode: 'offline'
 };
 
 module.exports = function shopify(shopifyConfig) {
   PropTypes.checkPropTypes(ShopifyConfigTypes, shopifyConfig, 'option', 'ShopifyExpress');
 
-  const config = Object.assign(
-    {shopStore: new MemoryStrategy()},
-    shopifyConfig,
-  );
+  const config = Object.assign({}, defaults, shopifyConfig);
 
   return {
     middleware: createMiddleware(config),
