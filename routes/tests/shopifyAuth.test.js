@@ -24,7 +24,7 @@ describe('shopifyAuth', async () => {
 
   describe('/', () => {
     it('responds to get requests by returning a redirect page', async () => {
-      const response = await fetch(`${BASE_URL}/?shop=shop1`);
+      const response = await fetch(`${BASE_URL}/auth?shop=shop1`);
       const data = await response.text();
 
       expect(response.status).toBe(200);
@@ -32,7 +32,7 @@ describe('shopifyAuth', async () => {
     });
 
     it('responds with a 400 when no shop query parameter is given', async () => {
-      const response = await fetch(BASE_URL);
+      const response = await fetch(`${BASE_URL}/auth`);
       const data = await response.text();
 
       expect(response.status).toBe(400);
@@ -63,6 +63,7 @@ function createServer(afterAuth) {
   const app = express();
 
   const {auth, callback} = createShopifyAuthRoutes({
+    host: 'http://myshop.myshopify.com',
     apiKey: 'key',
     secret: 'secret',
     scope: ['scope'],
@@ -70,8 +71,8 @@ function createServer(afterAuth) {
     afterAuth,
   });
 
-  app.use('/', auth);
-  app.use('/callback', callback);
+  app.use('/auth', auth);
+  app.use('/auth/callback', callback);
   server = http.createServer(app);
 
   return new Promise((resolve, reject) => {

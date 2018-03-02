@@ -5,7 +5,7 @@ exports[`shopifyAuth / responds to get requests by returning a redirect page 1`]
         <html>
           <head>
             <script type=\\"text/javascript\\">
-              window.top.location.href = \\"https://shop1/admin/oauth/authorize?client_id=key&scope=scope&redirect_uri=undefined/auth/callback\\"
+              window.top.location.href = \\"https://shop1/admin/oauth/authorize?client_id=key&scope=scope&redirect_uri=http://myshop.myshopify.com/auth/callback\\"
             </script>
           </head>
         </html>"
