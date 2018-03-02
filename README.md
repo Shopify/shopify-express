@@ -24,7 +24,7 @@ const {
 // session is necessary for api proxy and auth verification
 app.use(session({secret: SHOPIFY_APP_SECRET}));
 
-const shopify = shopifyExpress({
+const {routes, withShop} = shopifyExpress({
   host: SHOPIFY_APP_HOST,
   apiKey: SHOPIFY_APP_KEY,
   secret: SHOPIFY_APP_SECRET,
@@ -36,8 +36,11 @@ const shopify = shopifyExpress({
   },
 });
 
-// mounts '/auth/shopify' and '/api' off of '/'
-app.use('/', shopify.routes);
+// mounts '/auth' and '/api' off of '/'
+app.use('/shopify', routes);
+
+// shields myAppMiddleware from being accessed without session
+app.use('/myApp', withShop({authBaseUrl: '/shopify'}), myAppMiddleware)
 ```
 
 ## Shopify routes
@@ -141,9 +144,9 @@ If you do not have a table already created for your store, you can generate one 
 
 ### `withShop`
 
-`app.use('/someProtectedPath', withShop, someHandler);`
+`app.use('/someProtectedPath', withShop({authBaseUrl: '/shopify'}), someHandler);`
 
-Express middleware that validates the presence of your shop session.
+Express middleware that validates the presence of your shop session. The parameter you pass to it should match the base URL for where you've mounted the shopify routes.
 
 ### `withWebhook`
 
@@ -155,8 +158,10 @@ Express middleware that validates the presence of a valid HMAC signature to allo
 
 You can look at [shopify-node-app](https://github.com/shopify/shopify-node-app) for a complete working example.
 
-
 ## Gotchas
+
+### Install route
+For the moment the app expects you to mount your install route at `/install`. See [shopify-node-app](https://github.com/shopify/shopify-node-app) for details.
 
 ### Express Session
 This library expects [express-session](https://www.npmjs.com/package/express-session) or a compatible library to be installed and set up for much of it's functionality. Api Proxy and auth verification functions won't work without something putting a `session` key on `request`.

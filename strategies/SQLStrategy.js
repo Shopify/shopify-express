@@ -21,8 +21,8 @@ module.exports = class SQLStrategy {
         table.string('access_token');
         table.unique('shopify_domain');
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.log(error);
       });
   }
 
