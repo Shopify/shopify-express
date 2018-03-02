@@ -17,6 +17,9 @@ Array [
   Array [
     "Warning: Failed option type: Invalid option \`afterAuth\` of type \`boolean\` supplied to \`ShopifyExpress\`, expected \`function\`.",
   ],
+  Array [
+    "Warning: Failed option type: Invalid option \`accessMode\` of value \`gerblable\` supplied to \`ShopifyExpress\`, expected one of [\\"offline\\",\\"online\\"].",
+  ],
 ]
 `;
 
