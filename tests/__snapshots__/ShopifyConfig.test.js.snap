@@ -37,8 +37,5 @@ Array [
   Array [
     "Warning: Failed option type: The option \`afterAuth\` is marked as required in \`ShopifyExpress\`, but its value is \`undefined\`.",
   ],
-  Array [
-    "Warning: Failed option type: ShopifyExpress: option type \`shopStore\` is invalid; it must be a function, usually from the \`prop-types\` package, but received \`undefined\`.",
-  ],
 ]
 `;
