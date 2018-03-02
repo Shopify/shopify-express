@@ -4,7 +4,7 @@ const http = require('http');
 const express = require('express');
 
 const { MemoryStrategy } = require('../../strategies');
-const createShopifyAuthRouter = require('../shopifyAuth');
+const createShopifyAuthRoutes = require('../shopifyAuth');
 
 const PORT = 3000;
 const BASE_URL = `http://localhost:${PORT}`
@@ -62,17 +62,16 @@ describe('shopifyAuth', async () => {
 function createServer(afterAuth) {
   const app = express();
 
-  app.use(
-    '/',
-    createShopifyAuthRouter({
-      apiKey: 'key',
-      secret: 'secret',
-      scope: ['scope'],
-      shopStore: new MemoryStrategy(),
-      afterAuth,
-    }),
-  );
+  const {auth, callback} = createShopifyAuthRoutes({
+    apiKey: 'key',
+    secret: 'secret',
+    scope: ['scope'],
+    shopStore: new MemoryStrategy(),
+    afterAuth,
+  });
 
+  app.use('/', auth);
+  app.use('/callback', callback);
   server = http.createServer(app);
 
   return new Promise((resolve, reject) => {

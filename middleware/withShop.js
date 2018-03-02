@@ -1,19 +1,18 @@
-module.exports = function withShop({ redirect } = { redirect: true }) {
+module.exports = function withShop({ authBaseUrl } = {}) {
   return function verifyRequest(request, response, next) {
-    const { query: { shop }, session } = request;
+    const { query: { shop }, session, baseUrl } = request;
 
     if (session && session.accessToken) {
-      return next();
+      next();
+      return;
     }
 
-    if (shop && redirect) {
-      return response.redirect(`/auth/shopify?shop=${shop}`);
+    if (shop) {
+      response.redirect(`${authBaseUrl || baseUrl}/auth?shop=${shop}`);
+      return;
     }
 
-    if (redirect) {
-      return response.redirect('/install');
-    }
-
-    return response.status(401).json('Unauthorized');
+    response.redirect('/install');
+    return;
   };
 };
