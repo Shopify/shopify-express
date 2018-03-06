@@ -1,5 +1,5 @@
 1. Merge your branch into master
-2. Run `npm version` which will do the following:
+2. Run `npm version [version]` which will do the following:
   * write new version to package.json
   * create a new commit with a commit message matching the version number
   * create a new tag matching the version number
