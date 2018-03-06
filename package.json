@@ -1,6 +1,6 @@
 {
   "name": "@shopify/shopify-express",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "author": "Shopify Inc.",
   "description": "Get up and running quickly with Express.js and the Shopify API.",
   "keywords": [
