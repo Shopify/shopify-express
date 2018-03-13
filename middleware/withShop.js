@@ -1,8 +1,16 @@
 module.exports = function withShop({ authBaseUrl } = {}) {
   return function verifyRequest(request, response, next) {
-    const { query: { shop }, session, baseUrl } = request;
+    const { session, baseUrl } = request;
+    let shop = request.query.shop;
 
-    if (session && session.accessToken) {
+    if (!shop && request.get('referer')) {
+      const result = request.get('referer').match(/shop=([^&]+)/);
+      if (result) {
+        shop = result[1];
+      }
+    }
+
+    if (session && session.accessToken && session.shop && session.shop === shop) {
       next();
       return;
     }
