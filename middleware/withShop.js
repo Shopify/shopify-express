@@ -1,26 +1,27 @@
 module.exports = function withShop({ authBaseUrl } = {}) {
   return function verifyRequest(request, response, next) {
-    const { session, baseUrl } = request;
-    let shop = request.query.shop;
+    const { query = {}, session = {}, baseUrl } = request;
+    const { accessToken } = session;
+    const shop = getShopFromReferrer(request.get('referer')) || query.shop;
 
-    if (!shop && request.get('referer')) {
-      const result = request.get('referer').match(/shop=([^&]+)/);
-      if (result) {
-        shop = result[1];
-      }
-    }
-
-    if (session && session.accessToken && session.shop && session.shop === shop) {
+    if (accessToken && session.shop === shop) {
       next();
       return;
     }
 
     if (shop) {
-      response.redirect(`${authBaseUrl || baseUrl}/auth?shop=${shop}`);
+      response.redirect(`${authBaseUrl || baseUrl}/auth/shopify?shop=${shop}`);
       return;
     }
 
     response.redirect('/install');
-    return;
   };
+
+  function getShopFromReferrer(referrer) {
+    if (!referrer) {
+      return;
+    }
+    const result = referrer.match(/shop=([^&]+)/);
+    return result && result[1];
+  }
 };
