@@ -1,4 +1,4 @@
-const querystring = require('querystring');
+const qs = require('qs');
 const fetch = require('node-fetch');
 
 const DISALLOWED_URLS = [
@@ -35,7 +35,7 @@ module.exports = async function shopifyApiProxy(incomingRequest, response, next)
   }
 
   try {
-    const searchParams = querystring.stringify(query);
+    const searchParams = qs.stringify(query);
     const searchString = searchParams.length > 0
       ? `?${searchParams}`
       : '';
