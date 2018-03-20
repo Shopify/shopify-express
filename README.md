@@ -37,7 +37,7 @@ const {routes, withShop} = shopifyExpress({
   },
 });
 
-// mounts '/auth' and '/api' off of '/'
+// mounts '/auth' and '/api' off of '/shopify'
 app.use('/shopify', routes);
 
 // shields myAppMiddleware from being accessed without session
@@ -173,7 +173,7 @@ It is possible to use auth without a session key on your request, but not recomm
 This library handles body parsing on it's own for webhooks. If you're using webhooks you should make sure to follow express best-practices by only adding your body parsing middleware to specific routes that need it.
 
 **Good**
-```
+```javascript
   app.use('/some-route', bodyParser.json(), myHandler);
 
   app.use('/webhook', withWebhook(myWebhookHandler));
@@ -181,7 +181,7 @@ This library handles body parsing on it's own for webhooks. If you're using webh
 ```
 
 **Bad**
-```
+```javascript
   app.use(bodyParser.json());
   app.use('/some-route', myHandler);
 
