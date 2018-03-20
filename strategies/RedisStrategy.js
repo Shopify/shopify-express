@@ -22,7 +22,11 @@ module.exports = class RedisStrategy {
         return done(err);
       }
 
-      done(null, shopData);
+      if (shopData) {
+        done(null, shopData);
+      } else {
+        done(null, {});
+      }
     });
   }
 };
