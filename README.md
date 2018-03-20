@@ -132,10 +132,9 @@ If you do not have a table already created for your store, you can generate one 
 ```javascript
   class Strategy {
     // shop refers to the shop's domain name
-    getShop({ shop }, done))
+    getShop({ shop }): Promise<{accessToken: string}>
     // shop refers to the shop's domain name
-    // data can by any serializable object
-    storeShop({ shop, accessToken, data }, done)
+    storeShop({ shop, accessToken }): Promise<{accessToken: string}>
   }
 ```
 
