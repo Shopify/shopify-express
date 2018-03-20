@@ -1,21 +1,17 @@
-const Redis = require('redis');
+const Redis = require('handy-redis');
 
 module.exports = class RedisStrategy {
   constructor(redisConfig) {
     this.client = Redis.createClient(redisConfig);
   }
 
-  storeShop({ shop, accessToken, data = {} }, done) {
-    const shopData = Object.assign({}, { accessToken }, data);
-    this.client.hmset(shop, shopData, err => {
-      if (err) {
-        done(err);
-      }
+  async storeShop({ shop, accessToken }) {
+    await this.client.hmset(shop, {accessToken})
 
-      done(null, shopData);
-    });
+    return {accessToken};
   }
 
+<<<<<<< HEAD
   getShop({ shop }, done) {
     this.client.hgetall(shop, (err, shopData) => {
       if (err) {
@@ -28,5 +24,9 @@ module.exports = class RedisStrategy {
         done(null, {});
       }
     });
+=======
+  async getShop({ shop }) {
+    return await this.client.hgetall(shop) || {};
+>>>>>>> 🎨 refactor strategies to use promises
   }
 };

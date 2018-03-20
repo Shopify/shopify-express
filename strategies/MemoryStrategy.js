@@ -3,17 +3,13 @@ module.exports = class MemoryStrategy {
     this.store = {};
   }
 
-  storeShop({ shop, accessToken, data = {} }, done) {
-    this.store[shop] = Object.assign(
-      {},
-      { accessToken },
-      data
-    );
+  async storeShop({ shop, accessToken }) {
+    this.store[shop] = {accessToken};
 
-    return done(null, accessToken);
+    return {accessToken};
   }
 
-  getShop({ shop }, done) {
-    return done(null, this.store[shop]);
+  async getShop({ shop }) {
+    return this.store[shop];
   }
 };

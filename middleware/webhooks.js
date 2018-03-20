@@ -3,7 +3,7 @@ const getRawBody = require('raw-body');
 
 module.exports = function configureWithWebhook({ secret, shopStore }) {
   return function createWebhookHandler(onVerified) {
-    return async function withWebhook(request, response) {
+    return async function withWebhook(request, response, next) {
       const { body: data } = request;
       const hmac = request.get('X-Shopify-Hmac-Sha256');
       const topic = request.get('X-Shopify-Topic');
@@ -22,22 +22,18 @@ module.exports = function configureWithWebhook({ secret, shopStore }) {
           return;
         }
 
-        shopStore.getShop({ shop: shopDomain }, (error, { accessToken }) => {
-          if (error) {
-            response.status(401).send();
-            onVerified(new Error("Couldn't fetch credentials for shop"));
-            return;
-          }
+        const {accessToken} = await shopStore.getShop({ shop: shopDomain });
 
-          request.body = rawBody.toString('utf8');
-          request.webhook = { topic, shopDomain, accessToken };
+        request.body = rawBody.toString('utf8');
+        request.webhook = { topic, shopDomain, accessToken };
 
-          response.status(200).send();
+        response.status(200).send();
 
-          onVerified(null, request);
-        });
-      } catch(error) {
-        response.send(error);
+        onVerified(null, request);
+      } catch (error) {
+        response.status(401).send();
+        onVerified(new Error("Unable to verify request HMAC"));
+        return;
       }
     };
   }
