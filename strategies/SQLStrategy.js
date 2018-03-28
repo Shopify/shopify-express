@@ -14,33 +14,23 @@ module.exports = class SQLStrategy {
   }
 
   initialize() {
-    return this.knex.schema
-      .createTableIfNotExists('shops', table => {
-        table.increments('id');
-        table.string('shopify_domain');
-        table.string('access_token');
-        table.unique('shopify_domain');
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    return this.knex.schema.createTableIfNotExists('shops', table => {
+      table.increments('id');
+      table.string('shopify_domain');
+      table.string('access_token');
+      table.unique('shopify_domain');
+    });
   }
 
-  storeShop({ shop, accessToken, data = {} }, done) {
-    this.knex
-      .raw(
-        `INSERT OR IGNORE INTO shops (shopify_domain, access_token) VALUES ('${shop}', '${accessToken}')`
-      )
-      .then(result => {
-        return done(null, accessToken);
-      });
+  async storeShop({ shop, accessToken }) {
+    await this.knex.raw(
+      `INSERT OR IGNORE INTO shops (shopify_domain, access_token) VALUES ('${shop}', '${accessToken}')`
+    );
+
+    return {accessToken};
   }
 
-  getShop({ shop }, done) {
-    this.knex('shops')
-      .where('shopify_domain', shop)
-      .then(result => {
-        return done(null, result);
-      });
+  getShop({ shop }) {
+    return this.knex('shops').where('shopify_domain', shop)
   }
 };

@@ -49,7 +49,7 @@ module.exports = function createShopifyAuthRoutes({
     // Users are redirected here after clicking `Install`.
     // The redirect from Shopify contains the authorization_code query parameter,
     // which the app exchanges for an access token
-    async callback(request, response) {
+    async callback(request, response, next) {
       const { query } = request;
       const { code, hmac, shop } = query;
 
@@ -87,13 +87,10 @@ module.exports = function createShopifyAuthRoutes({
       });
 
       const responseBody = await remoteResponse.json();
-
       const accessToken = responseBody.access_token;
 
-      shopStore.storeShop({ accessToken, shop }, (err, token) => {
-        if (err) {
-          console.error('🔴 Error storing shop access token', err);
-        }
+      try {
+        const {token} = await shopStore.storeShop({ accessToken, shop })
 
         if (request.session) {
           request.session.accessToken = accessToken;
@@ -103,7 +100,10 @@ module.exports = function createShopifyAuthRoutes({
         }
 
         afterAuth(request, response);
-      });
+      } catch (error) {
+        console.error('🔴 Error storing shop access token', error);
+        next(error);
+      }
     }
   };
 };
