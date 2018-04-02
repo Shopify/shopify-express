@@ -29,6 +29,9 @@
       "prettier:check"
     ]
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "body-parser": "^1.18.2",
     "connect-redis": "^3.3.0",
