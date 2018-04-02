@@ -1,6 +1,0 @@
-deploy:
-  override:
-    - rm -rf node_modules
-    - yarn install
-    - yarn run test
-    - npm publish
