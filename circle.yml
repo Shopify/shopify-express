@@ -5,5 +5,7 @@ dependencies:
   override:
     - yarn install --dev
 test:
+  pre:
+    - yarn run prettier:check
   override:
     - yarn run test:ci

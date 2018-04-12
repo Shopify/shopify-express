@@ -18,8 +18,8 @@
     "node": ">=8.1.0"
   },
   "scripts": {
-    "prettier:check": "prettier-check --single-quote --trailing-comma=all {middleware,routes,shopStore}{/*,/**/*}.{js}",
-    "prettier:fix": "prettier --single-quote --trailing-comma=all --write {middleware,routes,shopStore}{/*,/**/*}.{js}",
+    "prettier:check": "prettier-check --single-quote --trailing-comma=all {middleware,routes,shopStore}/**/*.js",
+    "prettier:fix": "prettier --single-quote --trailing-comma=all --write {middleware,routes,shopStore}/**/*.js",
     "precommit": "lint-staged",
     "test": "jest",
     "test:ci": "jest --ci"
