@@ -1,4 +1,4 @@
-const findFreePort = require('find-free-port')
+const findFreePort = require('find-free-port');
 const fetch = require('node-fetch');
 const http = require('http');
 const express = require('express');
@@ -7,14 +7,14 @@ const { MemoryStrategy } = require('../../strategies');
 const createShopifyAuthRoutes = require('../shopifyAuth');
 
 const PORT = 3000;
-const BASE_URL = `http://localhost:${PORT}`
+const BASE_URL = `http://localhost:${PORT}`;
 
 let server;
 let afterAuth;
 describe('shopifyAuth', async () => {
   beforeEach(async () => {
     afterAuth = jest.fn();
-    server = await createServer({afterAuth});
+    server = await createServer({ afterAuth });
   });
 
   afterEach(() => {
@@ -32,7 +32,7 @@ describe('shopifyAuth', async () => {
 
     it('redirect page includes per-user grant for accessMode: online', async () => {
       await server.close();
-      server = await createServer({accessMode: 'online'});
+      server = await createServer({ accessMode: 'online' });
 
       const response = await fetch(`${BASE_URL}/auth?shop=shop1`);
       const data = await response.text();
@@ -82,7 +82,9 @@ function createServer(userConfig = {}) {
     afterAuth: jest.fn(),
   };
 
-  const {auth, callback} = createShopifyAuthRoutes(Object.assign({}, serverConfig, userConfig));
+  const { auth, callback } = createShopifyAuthRoutes(
+    Object.assign({}, serverConfig, userConfig),
+  );
 
   app.use('/auth', auth);
   app.use('/auth/callback', callback);
@@ -94,6 +96,6 @@ function createServer(userConfig = {}) {
         throw err;
       }
       server.listen(PORT, resolve(server));
-    })
+    });
   });
 }

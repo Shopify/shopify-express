@@ -18,11 +18,11 @@ module.exports = function configureWithWebhook({ secret, shopStore }) {
 
         if (generated_hash !== hmac) {
           response.status(401).send();
-          onVerified(new Error("Unable to verify request HMAC"));
+          onVerified(new Error('Unable to verify request HMAC'));
           return;
         }
 
-        const {accessToken} = await shopStore.getShop({ shop: shopDomain });
+        const { accessToken } = await shopStore.getShop({ shop: shopDomain });
 
         request.body = rawBody.toString('utf8');
         request.webhook = { topic, shopDomain, accessToken };
@@ -32,9 +32,9 @@ module.exports = function configureWithWebhook({ secret, shopStore }) {
         onVerified(null, request);
       } catch (error) {
         response.status(401).send();
-        onVerified(new Error("Unable to verify request HMAC"));
+        onVerified(new Error('Unable to verify request HMAC'));
         return;
       }
     };
-  }
+  };
 };
