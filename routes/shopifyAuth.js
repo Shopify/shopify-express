@@ -17,7 +17,7 @@ module.exports = function createShopifyAuthRoutes({
       const { query, baseUrl } = request;
       const { shop } = query;
       
-      //Remove unnecessary /
+      //Remove first / at baseURL
       baseUrl = baseUrl.replace(/^\//, '');
 
       if (shop == null) {
