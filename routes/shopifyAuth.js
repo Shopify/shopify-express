@@ -14,7 +14,7 @@ module.exports = function createShopifyAuthRoutes({
   return {
     // This function initializes the Shopify OAuth Process
     auth(request, response) {
-      const { query, baseUrl } = request;
+      let { query, baseUrl } = request;
       const { shop } = query;
       
       //Remove first / at baseURL
