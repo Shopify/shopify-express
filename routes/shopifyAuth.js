@@ -16,6 +16,9 @@ module.exports = function createShopifyAuthRoutes({
     auth(request, response) {
       const { query, baseUrl } = request;
       const { shop } = query;
+      
+      //Remove unnecessary /
+      baseUrl = baseUrl.replace(/^\//, '');
 
       if (shop == null) {
         return response.status(400).send('Expected a shop query parameter');
