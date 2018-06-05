@@ -1,4 +1,4 @@
-const querystring = require('querystring');
+const querystring = require('qs');
 const fetch = require('node-fetch');
 
 const DISALLOWED_URLS = [
