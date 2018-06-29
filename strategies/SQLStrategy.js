@@ -24,7 +24,7 @@ module.exports = class SQLStrategy {
 
   async storeShop({ shop, accessToken }) {
     await this.knex.raw(
-      `INSERT OR IGNORE INTO shops (shopify_domain, access_token) VALUES ('${shop}', '${accessToken}')`
+      `INSERT IGNORE INTO shops (shopify_domain, access_token) VALUES ('${shop}', '${accessToken}')`
     );
 
     return {accessToken};
