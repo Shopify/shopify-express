@@ -15,14 +15,14 @@
     "url": "https://github.com/Shopify/shopify-express.git"
   },
   "engines": {
-    "node": ">=8.1.0"
+    "node": ">=9.2.1"
   },
   "scripts": {
-    "prettier:check": "prettier-check --single-quote --trailing-comma=all {middleware,routes,shopStore}{/*,/**/*}.{js}",
-    "prettier:fix": "prettier --single-quote --trailing-comma=all --write {middleware,routes,shopStore}{/*,/**/*}.{js}",
-    "precommit": "lint-staged",
-    "test": "jest",
-    "test:ci": "jest --ci"
+    "prettier:check": "npx prettier-check --single-quote --trailing-comma=all {middleware,routes,shopStore}{/*,/**/*}.{js}",
+    "prettier:fix": "npx prettier --single-quote --trailing-comma=all --write {middleware,routes,shopStore}{/*,/**/*}.{js}",
+    "precommit": "npx lint-staged",
+    "test": "NODE_PATH=. jest --forceExit",
+    "test:ci": "NODE_PATH=. jest --ci --forceExit"
   },
   "lint-staged": {
     "*.{js}": [
@@ -45,11 +45,14 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
-    "find-free-port": "^1.1.0",
+    "eslint": "^5.0.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.1",
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "lint-staged": "^5.0.0",
     "prettier": "^1.8.2",
-    "prettier-check": "^2.0.0"
+    "prettier-check": "^2.0.0",
+    "supertest": "^3.1.0"
   }
 }
