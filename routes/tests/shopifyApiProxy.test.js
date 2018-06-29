@@ -1,14 +1,10 @@
-const findFreePort = require('find-free-port')
 const express = require('express');
 const http = require('http');
-const fetch = require.requireActual('node-fetch');
 const fetchMock = require.requireMock('node-fetch');
 
-const shopifyApiProxy = require('../shopifyApiProxy');
+const shopifyApiProxy = require('routes/shopifyApiProxy');
 
 const { DISALLOWED_URLS } = shopifyApiProxy;
-const PORT = 3000;
-const BASE_URL = `http://localhost:${PORT}`;
 const API_ROUTE = '/api';
 
 jest.mock('node-fetch');
@@ -18,7 +14,10 @@ let server;
 const originalConsoleError = console.error;
 describe('shopifyApiProxy', async () => {
   beforeEach(async () => {
-    fetchMock.mockImplementation(() => ({ status: 200, text: () => Promise.resolve() }));
+    fetchMock.mockImplementation(() => ({
+      status: 200,
+      text: () => Promise.resolve(),
+    }));
 
     session = {
       shop: 'shop.com',
@@ -38,11 +37,14 @@ describe('shopifyApiProxy', async () => {
   it('errors when no session is present', async () => {
     const endpoint = '/products';
     session = null;
-
-    const response = await fetch(`${BASE_URL}${API_ROUTE}${endpoint}`);
+    const response = await require('supertest')(server).get(
+      `${API_ROUTE}${endpoint}`,
+    );
 
     expect(fetchMock).not.toBeCalled();
-    expect(console.error).toBeCalledWith('A session middleware must be installed to use ApiProxy.');
+    expect(console.error).toBeCalledWith(
+      'A session middleware must be installed to use ApiProxy.',
+    );
     expect(response.status).toBe(401);
   });
 
@@ -51,12 +53,13 @@ describe('shopifyApiProxy', async () => {
     session.shop = null;
     session.accessToken = null;
 
-    const response = await fetch(`${BASE_URL}${API_ROUTE}${endpoint}`);
+    const response = await require('supertest')(server).get(
+      `${API_ROUTE}${endpoint}`,
+    );
 
     expect(fetchMock).not.toBeCalled();
     expect(response.status).toBe(401);
   });
-
 
   it('proxies requests to the shop given in session', async () => {
     const shop = 'some-shop.com';
@@ -64,7 +67,9 @@ describe('shopifyApiProxy', async () => {
     session.shop = shop;
 
     const expectedPath = `https://${shop}/admin${endpoint}`;
-    const response = await fetch(`${BASE_URL}${API_ROUTE}${endpoint}`);
+    const response = await require('supertest')(server).get(
+      `${API_ROUTE}${endpoint}`,
+    );
 
     expect(fetchMock).toBeCalled();
     expect(fetchMock.mock.calls[0][0]).toBe(expectedPath);
@@ -79,9 +84,8 @@ describe('shopifyApiProxy', async () => {
       'Content-Type': 'application/json',
       'X-Shopify-Access-Token': accessToken,
     };
-    const expectedPath = `https://${session.shop}/admin/`;
 
-    const response = await fetch(`${BASE_URL}${API_ROUTE}`);
+    const response = await require('supertest')(server).get(`${API_ROUTE}`);
 
     expect(fetchMock).toBeCalled();
     expect(fetchMock.mock.calls[0][1].headers).toMatchObject(expectedHeaders);
@@ -89,8 +93,10 @@ describe('shopifyApiProxy', async () => {
   });
 
   it('does not proxy requests to dissallowed urls', async () => {
-    for(const url of DISALLOWED_URLS) {
-      response = await fetch(`${BASE_URL}${API_ROUTE}${url}`);
+    for (const url of DISALLOWED_URLS) {
+      const response = await require('supertest')(server).get(
+        `${API_ROUTE}${url}`,
+      );
       expect(response.status).toBe(403);
     }
   });
@@ -98,11 +104,11 @@ describe('shopifyApiProxy', async () => {
   it('returns body from proxied request', async () => {
     const expectedBody = 'body text';
     fetchMock.mockImplementation(() => {
-      return {status: 200, text: () => Promise.resolve(expectedBody)};
+      return { status: 200, text: () => Promise.resolve(expectedBody) };
     });
 
-    const response = await fetch(`${BASE_URL}${API_ROUTE}`);
-    const body = await response.text();
+    const response = await require('supertest')(server).get(`${API_ROUTE}`);
+    const body = await response.text;
 
     expect(response.status).toBe(200);
     expect(body).toBe(expectedBody);
@@ -118,17 +124,10 @@ function createServer() {
       req.session = session;
       next();
     },
-    shopifyApiProxy
+    shopifyApiProxy,
   );
 
   server = http.createServer(app);
-
-  return new Promise((resolve, reject) => {
-    findFreePort(PORT, (err, freePort) => {
-      if (err) {
-        throw err;
-      }
-      server.listen(PORT, resolve(server));
-    })
-  });
+  server.listen(0);
+  return server;
 }
