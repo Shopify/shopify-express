@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/node:8.1
+    steps:
+      - run: yarn install --dev
+      - run: yarn run test:ci
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test

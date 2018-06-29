@@ -1,9 +1,0 @@
-machine:
-  node:
-    version: 8.1
-dependencies:
-  override:
-    - yarn install --dev
-test:
-  override:
-    - yarn run test:ci
