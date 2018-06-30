@@ -39,4 +39,16 @@ describe('ShopifyConfig', async () => {
     });
     expect(console.error).not.toBeCalled();
   });
+
+  it('does not log errors when given valid proptypes', () => {
+    let host = 'https://my.backend.com/double-slash';
+    let e = shopifyExpress({
+      apiKey: 'fake',
+      host: `${host}/`,
+      secret: 'cats',
+      scope: [],
+      afterAuth: () => null,
+    });
+    expect(e).toHaveProperty('config.host', host);
+  });
 });

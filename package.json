@@ -22,6 +22,7 @@
     "prettier:fix": "npx prettier --single-quote --trailing-comma=all --write {middleware,routes,shopStore}{/*,/**/*}.{js}",
     "precommit": "npx lint-staged",
     "test": "NODE_PATH=. npx jest --forceExit",
+    "test:watch": "NODE_PATH=. npx jest --watch",
     "test:ci": "NODE_PATH=. npx jest --ci --forceExit"
   },
   "lint-staged": {

@@ -25,11 +25,13 @@ module.exports = function shopify(shopifyConfig) {
     'option',
     'ShopifyExpress',
   );
-
+  if (typeof shopifyConfig.host === 'string')
+    shopifyConfig.host = shopifyConfig.host.replace(/\/$/, '');
   const config = Object.assign({}, defaults, shopifyConfig);
 
   return {
     middleware: createMiddleware(config),
     routes: createRouter(config),
+    config,
   };
 };
