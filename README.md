@@ -9,7 +9,7 @@ A small set of abstractions that will help you quickly build an Express.js app t
 
 ```javascript
 const express = require('express');
-const shopifyExpress = require('@shopify/shopify-express');
+const shopifyExpress = require('@topmonks/shopify-express');
 const session = require('express-session');
 
 const app = express();
@@ -75,8 +75,8 @@ By default the package comes with `MemoryStrategy`, `RedisStrategy`, and `Sqlite
 Simple javascript object based memory store for development purposes. Do not use this in production!
 
 ```javascript
-const shopifyExpress = require('@shopify/shopify-express');
-const {MemoryStrategy} = require('@shopify/shopify-express/strategies');
+const shopifyExpress = require('@topmonks/shopify-express');
+const {MemoryStrategy} = require('@topmonks/shopify-express/strategies');
 
 const shopify = shopifyExpress({
   shopStore: new MemoryStrategy(redisConfig),
@@ -89,8 +89,8 @@ const shopify = shopifyExpress({
 Uses [redis](https://www.npmjs.com/package/redis) under the hood, so you can pass it any configuration that's valid for the library.
 
 ```javascript
-const shopifyExpress = require('@shopify/shopify-express');
-const {RedisStrategy} = require('@shopify/shopify-express/strategies');
+const shopifyExpress = require('@topmonks/shopify-express');
+const {RedisStrategy} = require('@topmonks/shopify-express/strategies');
 
 const redisConfig = {
   // your config here
@@ -107,8 +107,8 @@ const shopify = shopifyExpress({
 Uses [knex](https://www.npmjs.com/package/knex) under the hood, so you can pass it any configuration that's valid for the library. By default it uses `sqlite3` so you'll need to run `yarn add sqlite3` to use it. Knex also supports `postgreSQL` and `mySQL`.
 
 ```javascript
-const shopifyExpress = require('@shopify/shopify-express');
-const {SQLStrategy} = require('@shopify/shopify-express/strategies');
+const shopifyExpress = require('@topmonks/shopify-express');
+const {SQLStrategy} = require('@topmonks/shopify-express/strategies');
 
 // uses sqlite3 if no settings are specified
 const knexConfig = {
@@ -169,18 +169,10 @@ This library expects [express-session](https://www.npmjs.com/package/express-ses
 It is possible to use auth without a session key on your request, but not recommended.
 
 ### Body Parser
-This library handles body parsing on it's own for webhooks. If you're using webhooks you should make sure to follow express best-practices by only adding your body parsing middleware to specific routes that need it.
+This library handles body parsing on it's own for webhooks. If you're using a body parsers without any route then prepend also raw body parser from this package to enable webhooks.
 
-**Good**
 ```javascript
-  app.use('/some-route', bodyParser.json(), myHandler);
-
-  app.use('/webhook', withWebhook(myWebhookHandler));
-  app.use('/', shopifyExpress.routes);
-```
-
-**Bad**
-```javascript
+  app.use(require('@topmonks/shopify-express/middleware/rawBody'))
   app.use(bodyParser.json());
   app.use('/some-route', myHandler);
 
