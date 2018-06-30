@@ -28,7 +28,7 @@ describe('webhooks', async () => {
     const body = { foo: '\\""\\bar' };
     const hash = crypto
       .createHmac('sha256', SECRET)
-      .update(new Buffer(JSON.stringify(body)))
+      .update(Buffer.from(JSON.stringify(body)))
       .digest('base64');
 
     await require('supertest')(server)
@@ -61,7 +61,7 @@ describe('webhooks', async () => {
     const body = { foo: '\\""\\bar' };
     const hash = crypto
       .createHmac('sha256', SECRET)
-      .update(new Buffer(JSON.stringify(body)))
+      .update(Buffer.from(JSON.stringify(body)))
       .digest('base64');
 
     await require('supertest')(server)
@@ -93,7 +93,7 @@ describe('webhooks', async () => {
     const body = { foo: '\\""\\bar' };
     const hash = crypto
       .createHmac('sha256', SECRET)
-      .update(new Buffer(JSON.stringify(body)))
+      .update(Buffer.from(JSON.stringify(body)))
       .digest('base64');
 
     await require('supertest')(server)
