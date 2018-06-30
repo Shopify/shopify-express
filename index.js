@@ -1,7 +1,7 @@
 const PropTypes = require('prop-types');
 const createRouter = require('./routes');
 const createMiddleware = require('./middleware');
-const {MemoryStrategy} = require('./strategies');
+const { MemoryStrategy } = require('./strategies');
 
 const ShopifyConfigTypes = {
   apiKey: PropTypes.string.isRequired,
@@ -15,11 +15,16 @@ const ShopifyConfigTypes = {
 
 const defaults = {
   shopStore: new MemoryStrategy(),
-  accessMode: 'offline'
+  accessMode: 'offline',
 };
 
 module.exports = function shopify(shopifyConfig) {
-  PropTypes.checkPropTypes(ShopifyConfigTypes, shopifyConfig, 'option', 'ShopifyExpress');
+  PropTypes.checkPropTypes(
+    ShopifyConfigTypes,
+    shopifyConfig,
+    'option',
+    'ShopifyExpress',
+  );
 
   const config = Object.assign({}, defaults, shopifyConfig);
 

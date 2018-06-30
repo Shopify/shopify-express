@@ -3,14 +3,23 @@ const getRawBody = require('raw-body');
 
 module.exports = function configureWithWebhook({ secret, shopStore }) {
   return function createWebhookHandler(onVerified) {
-    return async function withWebhook(request, response, next) {
-      const { body: data } = request;
+    return async function withWebhook(request, response) {
       const hmac = request.get('X-Shopify-Hmac-Sha256');
       const topic = request.get('X-Shopify-Topic');
       const shopDomain = request.get('X-Shopify-Shop-Domain');
 
       try {
-        const rawBody = await getRawBody(request);
+        let rawBody = null;
+        if (request.readable) {
+          rawBody = await getRawBody(request);
+        } else {
+          if (!request.rawBody) {
+            throw new Error(
+              `Some body parser already read request stream. Please prepend before the parser \`app.use(shopifyExpress.middleware.rawBody)\``,
+            );
+          }
+          rawBody = request.rawBody;
+        }
         const generated_hash = crypto
           .createHmac('sha256', secret)
           .update(rawBody)
@@ -18,12 +27,11 @@ module.exports = function configureWithWebhook({ secret, shopStore }) {
 
         if (generated_hash !== hmac) {
           response.status(401).send();
-          onVerified(new Error("Unable to verify request HMAC"));
+          onVerified(new Error('Unable to verify request HMAC'));
           return;
         }
 
-        const {accessToken} = await shopStore.getShop({ shop: shopDomain });
-
+        const { accessToken } = await shopStore.getShop({ shop: shopDomain });
         request.body = rawBody.toString('utf8');
         request.webhook = { topic, shopDomain, accessToken };
 
@@ -32,9 +40,9 @@ module.exports = function configureWithWebhook({ secret, shopStore }) {
         onVerified(null, request);
       } catch (error) {
         response.status(401).send();
-        onVerified(new Error("Unable to verify request HMAC"));
+        onVerified(error);
         return;
       }
     };
-  }
+  };
 };

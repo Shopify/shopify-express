@@ -39,7 +39,9 @@ module.exports = function createShopifyAuthRoutes({
         <html>
           <head>
             <script type="text/javascript">
-              window.top.location.href = "${redirectTo}?${querystring.stringify(redirectParams)}"
+              window.top.location.href = "${redirectTo}?${querystring.stringify(
+          redirectParams,
+        )}"
             </script>
           </head>
         </html>`,
@@ -77,26 +79,31 @@ module.exports = function createShopifyAuthRoutes({
         client_secret: secret,
       });
 
-      const remoteResponse = await fetch(`https://${shop}/admin/oauth/access_token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': Buffer.byteLength(requestBody),
+      const remoteResponse = await fetch(
+        `https://${shop}/admin/oauth/access_token`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': Buffer.byteLength(requestBody),
+          },
+          body: requestBody,
         },
-        body: requestBody,
-      });
+      );
 
       const responseBody = await remoteResponse.json();
       const accessToken = responseBody.access_token;
 
       try {
-        const {token} = await shopStore.storeShop({ accessToken, shop })
+        await shopStore.storeShop({ accessToken, shop });
 
         if (request.session) {
           request.session.accessToken = accessToken;
           request.session.shop = shop;
         } else {
-          console.warn('Session not present on request, please install a session middleware.');
+          console.warn(
+            'Session not present on request, please install a session middleware.',
+          );
         }
 
         afterAuth(request, response);
@@ -104,6 +111,6 @@ module.exports = function createShopifyAuthRoutes({
         console.error('🔴 Error storing shop access token', error);
         next(error);
       }
-    }
+    },
   };
 };
