@@ -16,7 +16,7 @@ jobs:
       - run: yarn run test:ci
   node10:
     docker:
-      - image: circleci/node:9
+      - image: circleci/node:10
     steps:
       - checkout
       - run: yarn install --dev
