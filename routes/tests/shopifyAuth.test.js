@@ -36,6 +36,48 @@ describe('shopifyAuth', async () => {
       expect(data).toContain('grant_options%5B%5D=per-user');
     });
 
+    it('redirect page includes multiple scopes', async () => {
+      let server = await createServer({
+        accessMode: 'online',
+        scope: ['scope1', 'scope2'],
+      });
+      const response = await require('supertest')(server).get(
+        '/auth?shop=shop1',
+      );
+      const data = response.text;
+      expect(response.status).toBe(200);
+      expect(data).toContain('grant_options%5B%5D=per-user');
+      expect(data).toContain('scope=scope1%2Cscope2');
+    });
+
+    it('redirect page includes single array scopes', async () => {
+      let server = await createServer({
+        accessMode: 'online',
+        scope: ['scope1, scope2'],
+      });
+      const response = await require('supertest')(server).get(
+        '/auth?shop=shop1',
+      );
+      const data = response.text;
+      expect(response.status).toBe(200);
+      expect(data).toContain('grant_options%5B%5D=per-user');
+      expect(data).toContain('scope=scope1%2Cscope2');
+    });
+
+    it('redirect page includes single string scopes', async () => {
+      let server = await createServer({
+        accessMode: 'online',
+        scope: 'scope1, scope2',
+      });
+      const response = await require('supertest')(server).get(
+        '/auth?shop=shop1',
+      );
+      const data = response.text;
+      expect(response.status).toBe(200);
+      expect(data).toContain('grant_options%5B%5D=per-user');
+      expect(data).toContain('scope=scope1%2Cscope2');
+    });
+
     it('responds with a 400 when no shop query parameter is given', async () => {
       const response = await require('supertest')(server).get('/auth');
       const data = response.text;

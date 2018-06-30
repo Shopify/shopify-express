@@ -22,7 +22,8 @@ module.exports = function createShopifyAuthRoutes({
       }
 
       const redirectTo = `https://${shop}/admin/oauth/authorize`;
-
+      if (Array.isArray(scope)) scope = scope.join(',');
+      if (typeof scope === 'string') scope = scope.replace(/ /g, '');
       const redirectParams = {
         baseUrl,
         scope,
