@@ -1,18 +1,18 @@
 {
-  "name": "@shopify/shopify-express",
-  "version": "1.0.0-alpha.7",
-  "author": "Shopify Inc.",
+  "name": "@topmonks/shopify-express",
+  "version": "1.0.0",
+  "author": "Topmonks",
   "description": "Get up and running quickly with Express.js and the Shopify API.",
   "keywords": [
     "shopify",
     "express.js",
     "express middleware"
   ],
-  "bugs": "https://github.com/Shopify/shopify-express/issues",
+  "bugs": "https://github.com/topmonks/shopify-express",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Shopify/shopify-express.git"
+    "url": "https://github.com/topmonks/shopify-express.git"
   },
   "engines": {
     "node": ">=9.2.1"
