@@ -1,4 +1,7 @@
-module.exports = function withShop({ authBaseUrl } = {}) {
+module.exports = function withShop({
+  authBaseUrl,
+  redirect = '/install',
+} = {}) {
   return function verifyRequest(request, response, next) {
     const {
       query: { shop },
@@ -11,12 +14,14 @@ module.exports = function withShop({ authBaseUrl } = {}) {
       return;
     }
 
+    if (session) session.returnUrl = request.url;
+
     if (shop) {
       response.redirect(`${authBaseUrl || baseUrl}/auth?shop=${shop}`);
       return;
     }
 
-    response.redirect('/install');
+    response.redirect(redirect);
     return;
   };
 };
