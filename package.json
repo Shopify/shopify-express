@@ -1,6 +1,6 @@
 {
   "name": "@topmonks/shopify-express",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Topmonks",
   "description": "Get up and running quickly with Express.js and the Shopify API.",
   "keywords": [
