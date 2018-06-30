@@ -15,7 +15,7 @@
     "url": "https://github.com/topmonks/shopify-express.git"
   },
   "engines": {
-    "node": ">=9.2.1"
+    "node": ">=7.6"
   },
   "scripts": {
     "prettier:check": "npx prettier-check --single-quote --trailing-comma=all {middleware,routes,shopStore}{/*,/**/*}.{js}",

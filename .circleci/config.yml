@@ -14,9 +14,17 @@ jobs:
       - checkout
       - run: yarn install --dev
       - run: yarn run test:ci
+  node10:
+    docker:
+      - image: circleci/node:9
+    steps:
+      - checkout
+      - run: yarn install --dev
+      - run: yarn run test:ci
 workflows:
   version: 2
   test:
     jobs:
       - node8
       - node9
+      - node10
