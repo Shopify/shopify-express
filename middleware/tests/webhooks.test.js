@@ -74,7 +74,7 @@ describe('webhooks', async () => {
       });
   });
 
-  it('if shows an error if request already read', async done => {
+  it('it shows an error if request already read', async done => {
     let session = {
       shop: 'shop.com',
       accessToken: 'token',

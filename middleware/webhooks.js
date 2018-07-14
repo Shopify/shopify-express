@@ -15,7 +15,7 @@ module.exports = function configureWithWebhook({ secret, shopStore }) {
         } else {
           if (!request.rawBody) {
             throw new Error(
-              `Some body parser already read request stream. Please prepend before the parser \`app.use(shopifyExpress.middleware.rawBody)\``,
+              `Some body-parser already read request stream. Please prepend before the parser \`app.use(require('@topmonks/shopify-express/middleware/rawBody'))\``,
             );
           }
           rawBody = request.rawBody;
