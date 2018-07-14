@@ -13,7 +13,7 @@ module.exports = function configureWithWebhook({ secret, shopStore }) {
         const rawBody = await getRawBody(request);
         const generated_hash = crypto
           .createHmac('sha256', secret)
-          .update(rawBody)
+          .update(rawBody.body)
           .digest('base64');
 
         if (generated_hash !== hmac) {
