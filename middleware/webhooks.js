@@ -20,12 +20,23 @@ module.exports = function configureWithWebhook({ secret, shopStore }) {
           }
           rawBody = request.rawBody;
         }
-        const generated_hash = crypto
+        const generatedHash = crypto
           .createHmac('sha256', secret)
           .update(rawBody)
           .digest('base64');
 
-        if (generated_hash !== hmac) {
+        let hashEquals = false;
+
+        try {
+          hashEquals = crypto.timingSafeEqual(
+            Buffer.from(generatedHash),
+            Buffer.from(hmac),
+          );
+        } catch (e) {
+          hashEquals = false;
+        }
+
+        if (!hashEquals) {
           response.status(401).send();
           onVerified(new Error('Unable to verify request HMAC'));
           return;
