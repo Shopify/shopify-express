@@ -137,7 +137,7 @@ If you do not have a table already created for your store, you can generate one 
 
 ## Helper middleware
 
-`const {middleware: {withShop, withWebhook}} = shopifyExpress(config);`
+`const {middleware: {withShop, withWebhook, withAppProxy}} = shopifyExpress(config);`
 
 ### `withShop`
 
@@ -150,6 +150,12 @@ Express middleware that validates the presence of your shop session. The paramet
 `app.use('/someProtectedPath', withWebhook, someHandler);`
 
 Express middleware that validates the presence of a valid HMAC signature to allow webhook requests from shopify to your app.
+
+### `withAppProxy`
+
+`app.use('/someProtectedPath', withAppProxy, someHandler);`
+
+Express middleware that validates the presence of a valid HMAC signature to allow app proxy requests from shopify to your app.
 
 ## Example app
 
