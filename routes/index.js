@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 
 const createShopifyAuthRoutes = require('./shopifyAuth');
 const shopifyApiProxy = require('./shopifyApiProxy');
+const shopifyGraphQLProxy = require('./shopifyGraphQLProxy');
 
 module.exports = function createRouter(shopifyConfig) {
   const router = express.Router();
@@ -17,6 +18,7 @@ module.exports = function createRouter(shopifyConfig) {
     verifyApiCall,
     shopifyApiProxy,
   );
+  router.use(shopifyGraphQLProxy());
 
   return router;
 };

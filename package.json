@@ -36,6 +36,7 @@
     "body-parser": "^1.18.2",
     "connect-redis": "^3.3.0",
     "express": "^4.16.2",
+    "express-http-proxy": "^1.2.0",
     "express-session": "^1.15.3",
     "knex": "^0.13.0",
     "node-fetch": "^1.7.3",
@@ -49,7 +50,9 @@
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "lint-staged": "^5.0.0",
+    "nock": "^9.4.4",
     "prettier": "^1.8.2",
-    "prettier-check": "^2.0.0"
+    "prettier-check": "^2.0.0",
+    "supertest": "^3.1.0"
   }
 }
