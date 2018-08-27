@@ -34,16 +34,7 @@ module.exports = function createShopifyAuthRoutes({
         redirectParams['grant_options[]'] = 'per-user';
       }
 
-      response.send(
-        `<!DOCTYPE html>
-        <html>
-          <head>
-            <script type="text/javascript">
-              window.top.location.href = "${redirectTo}?${querystring.stringify(redirectParams)}"
-            </script>
-          </head>
-        </html>`,
-      );
+      response.redirect(`${redirectTo}?${querystring.stringify(redirectParams)}`);
     },
 
     // Users are redirected here after clicking `Install`.
