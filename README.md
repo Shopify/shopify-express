@@ -1,9 +1,16 @@
+## Deprecation
+
+:exclamation: **This project is deprecated**. This means Shopify will not be maintaining it going forward. If you are interested in building a Shopify app using first party tools then check out our other libraries:
+
+* [@shopify/koa-shopify-auth](https://github.com/Shopify/quilt/tree/master/packages/koa-shopify-auth)
+* [@shopify/koa-shopify-graphql-proxy](https://github.com/Shopify/quilt/blob/master/packages/koa-shopify-graphql-proxy/README.md)
+* [shopify_app](https://github.com/Shopify/shopify_app)
+
+These are all used internally and written against technologies we use for our own applications. Of course, if you wish to continue using Express, feel free to fork this codebase and continue it as you wish.
+
 # shopify-express
 
 A small set of abstractions that will help you quickly build an Express.js app that consumes the Shopify API.
-
-:exclamation: **This project is currently in alpha status**. This means that the API could change at any time. It also means that your feedback will have a big impact on how the project evolves, so please feel free to [open issues](https://github.com/shopify/shopify-express/issues) if there is something you would like to see added.
-
 
 ## Example
 
