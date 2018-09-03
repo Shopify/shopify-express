@@ -2,6 +2,7 @@ const findFreePort = require('find-free-port')
 const fetch = require('node-fetch');
 const http = require('http');
 const express = require('express');
+const cookieParser = require('cookie-parser')
 
 const { MemoryStrategy } = require('../../strategies');
 const createShopifyAuthRoutes = require('../shopifyAuth');
@@ -22,23 +23,48 @@ describe('shopifyAuth', async () => {
   });
 
   describe('/', () => {
-    it('responds to get requests by returning a redirect page', async () => {
-      const response = await fetch(`${BASE_URL}/auth?shop=shop1`);
-      const data = await response.text();
+    describe('without cookie access', () => {
+      it('top-level redirects to the enable_cookies page', async () => {
+        const response = await fetch(`${BASE_URL}/auth?shop=shop1`);
+        const data = await response.text();
 
-      expect(response.status).toBe(200);
-      expect(data).toMatchSnapshot();
+        expect(response.status).toBe(200);
+        expect(data).toContain(`window.top.location.href = "${BASE_URL}/auth/enable_cookies?shop=shop1"`);
+      });
     });
 
-    it('redirect page includes per-user grant for accessMode: online', async () => {
-      await server.close();
-      server = await createServer({accessMode: 'online'});
+    describe('with cookie access but without a prior top-level attempt', () => {
+      it('responds to get requests by returning a redirect page', async () => {
+        const headers = {cookie: 'shopifyTestCookie=1;'};
+        const response = await fetch(`${BASE_URL}/auth?shop=shop1`, {headers});
+        const data = await response.text();
 
-      const response = await fetch(`${BASE_URL}/auth?shop=shop1`);
-      const data = await response.text();
+        expect(response.status).toBe(200);
+        expect(data).toMatchSnapshot();
+      });
 
-      expect(response.status).toBe(200);
-      expect(data).toContain('grant_options%5B%5D=per-user');
+      it('redirect page includes per-user grant for accessMode: online', async () => {
+        await server.close();
+        server = await createServer({accessMode: 'online'});
+
+        const headers = {cookie: 'shopifyTestCookie=1;'};
+        const response = await fetch(`${BASE_URL}/auth?shop=shop1`, {headers});
+        const data = await response.text();
+
+        expect(response.status).toBe(200);
+        expect(data).toContain('grant_options%5B%5D=per-user');
+      });
+    });
+
+    describe('with cookie access and a prior top-level attempt', () => {
+      it('redirects directly to the grant page', async () => {
+        const headers = {cookie: 'shopifyTestCookie=1; shopifyTopLevelOAuth=1;'};
+        const response = await fetch(`${BASE_URL}/auth?shop=shop1`, {headers, redirect: 'manual'});
+        const data = await response.text();
+
+        expect(response.status).toBe(302);
+        expect(response.headers.get('location')).toContain('https://shop1/admin/oauth/authorize');
+      });
     });
 
     it('responds with a 400 when no shop query parameter is given', async () => {
@@ -73,7 +99,7 @@ function createServer(userConfig = {}) {
   const app = express();
 
   const serverConfig = {
-    host: 'http://myshop.myshopify.com',
+    host: BASE_URL,
     apiKey: 'key',
     secret: 'secret',
     scope: ['scope'],
@@ -84,7 +110,7 @@ function createServer(userConfig = {}) {
 
   const {auth, callback} = createShopifyAuthRoutes(Object.assign({}, serverConfig, userConfig));
 
-  app.use('/auth', auth);
+  app.use('/auth', cookieParser(), auth);
   app.use('/auth/callback', callback);
   server = http.createServer(app);
 

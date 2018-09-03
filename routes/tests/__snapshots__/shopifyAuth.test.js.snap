@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`shopifyAuth / responds to get requests by returning a redirect page 1`] = `
-"<!DOCTYPE html>
-        <html>
-          <head>
-            <script type=\\"text/javascript\\">
-              window.top.location.href = \\"https://shop1/admin/oauth/authorize?baseUrl=%2Fauth&scope=scope&client_id=key&redirect_uri=http%3A%2F%2Fmyshop.myshopify.com%2Fauth%2Fcallback\\"
-            </script>
-          </head>
-        </html>"
-`;
-
 exports[`shopifyAuth / responds with a 400 when no shop query parameter is given 1`] = `"Expected a shop query parameter"`;
+
+exports[`shopifyAuth / with cookie access but without a prior top-level attempt responds to get requests by returning a redirect page 1`] = `
+"<!DOCTYPE html>
+    <html>
+      <head>
+        <script type=\\"text/javascript\\">
+          window.top.location.href = \\"https://shop1/admin/oauth/authorize?baseUrl=%2Fauth&scope=scope&client_id=key&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fcallback\\"
+        </script>
+      </head>
+    </html>"
+`;
