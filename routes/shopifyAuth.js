@@ -44,7 +44,7 @@ module.exports = function createShopifyAuthRoutes({
           </head>
         </html>`
       );
-    }
+    },
 
     // Users are redirected here after clicking `Install`.
     // The redirect from Shopify contains the authorization_code query parameter,
