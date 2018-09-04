@@ -57,13 +57,14 @@ describe('shopifyAuth', async () => {
     });
 
     describe('with cookie access and a prior top-level attempt', () => {
-      it('redirects directly to the grant page', async () => {
+      it('redirects directly to the grant page and removes top-level cookie', async () => {
         const headers = {cookie: 'shopifyTestCookie=1; shopifyTopLevelOAuth=1;'};
         const response = await fetch(`${BASE_URL}/auth?shop=shop1`, {headers, redirect: 'manual'});
         const data = await response.text();
 
         expect(response.status).toBe(302);
         expect(response.headers.get('location')).toContain('https://shop1/admin/oauth/authorize');
+        expect(response.headers.get('cookie')).toBe(null);
       });
     });
 

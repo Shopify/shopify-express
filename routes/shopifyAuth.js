@@ -50,6 +50,7 @@ module.exports = function createShopifyAuthRoutes({
         return;
       }
 
+      response.clearCookie(TOP_LEVEL_OAUTH_COOKIE_NAME);
       response.redirect(`${redirectTo}?${querystring.stringify(redirectParams)}`);
     },
 
