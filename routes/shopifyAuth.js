@@ -9,7 +9,7 @@ module.exports = function createShopifyAuthRoutes({
   scope,
   afterAuth,
   shopStore,
-  accessMode,
+  accessMode
 }) {
   return {
     // This function initializes the Shopify OAuth Process
@@ -42,14 +42,14 @@ module.exports = function createShopifyAuthRoutes({
               window.top.location.href = "${redirectTo}?${querystring.stringify(redirectParams)}"
             </script>
           </head>
-        </html>`,
+        </html>`
       );
     },
 
     // Users are redirected here after clicking `Install`.
     // The redirect from Shopify contains the authorization_code query parameter,
     // which the app exchanges for an access token
-    async callback(request, response, next) {
+    callback: async (request, response, next)=> {
       const { query } = request;
       const { code, hmac, shop } = query;
 
