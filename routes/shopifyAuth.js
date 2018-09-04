@@ -9,7 +9,7 @@ module.exports = function createShopifyAuthRoutes({
   scope,
   afterAuth,
   shopStore,
-  accessMode,
+  accessMode
 }) {
   return {
     // This function initializes the Shopify OAuth Process
@@ -42,7 +42,7 @@ module.exports = function createShopifyAuthRoutes({
               window.top.location.href = "${redirectTo}?${querystring.stringify(redirectParams)}"
             </script>
           </head>
-        </html>`,
+        </html>`
       );
     },
 
