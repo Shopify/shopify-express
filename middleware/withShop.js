@@ -1,4 +1,4 @@
-const TEST_COOKIE_NAME = 'shopifyTestCookie';
+const {TEST_COOKIE_NAME} = require('../constants');
 
 module.exports = function withShop({ authBaseUrl } = {}) {
   return function verifyRequest(request, response, next) {
