@@ -2,9 +2,7 @@ const querystring = require('querystring');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
 
-const {TEST_COOKIE_NAME} = require('../constants');
-
-const TOP_LEVEL_OAUTH_COOKIE_NAME = 'shopifyTopLevelOAuth';
+const {TEST_COOKIE_NAME, TOP_LEVEL_OAUTH_COOKIE_NAME} = require('../constants');
 
 module.exports = function createShopifyAuthRoutes({
   host,
