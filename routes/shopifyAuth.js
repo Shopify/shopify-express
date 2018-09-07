@@ -16,8 +16,11 @@ module.exports = function createShopifyAuthRoutes({
   return {
     // This function initializes the Shopify OAuth Process
     auth(request, response) {
-      const { query, baseUrl } = request;
+      let { query, baseUrl } = request;
       const { shop } = query;
+      
+      //Remove first / at baseURL
+      baseUrl = baseUrl.replace(/^\//, '');
 
       if (shop == null) {
         return response.status(400).send('Expected a shop query parameter');
