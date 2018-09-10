@@ -34,7 +34,7 @@ module.exports = function createShopifyAuthRoutes({
 
       const redirectParams = {
         baseUrl,
-        scope,
+        scope: Array.isArray(scope) ? scope.join(',') : scope,
         client_id: apiKey,
         redirect_uri: `${host}${baseUrl}/callback`,
       };
