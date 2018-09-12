@@ -1,6 +1,6 @@
 const {TEST_COOKIE_NAME, TOP_LEVEL_OAUTH_COOKIE_NAME} = require('../constants');
 
-module.exports = function withShop({ authBaseUrl } = {}) {
+module.exports = function withShop({ authBaseUrl, fallbackUrl } = {}) {
   return function verifyRequest(request, response, next) {
     const { query: { shop }, session, baseUrl } = request;
 
@@ -17,7 +17,7 @@ module.exports = function withShop({ authBaseUrl } = {}) {
       return;
     }
 
-    response.redirect('/install');
+    response.redirect(fallbackUrl || '/install');
     return;
   };
 };
