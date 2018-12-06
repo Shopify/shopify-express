@@ -100,8 +100,7 @@ module.exports = function createShopifyAuthRoutes({
         const {token} = await shopStore.storeShop({ accessToken, shop })
 
         if (request.session) {
-          request.session.accessToken = accessToken;
-          request.session.shop = shop;
+          request.session[`SHOPIFYAUTH:${shop}`] = accessToken;
         } else {
           console.warn('Session not present on request, please install a session middleware.');
         }
