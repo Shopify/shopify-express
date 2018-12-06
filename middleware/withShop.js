@@ -4,7 +4,7 @@ module.exports = function withShop({ authBaseUrl } = {}) {
   return function verifyRequest(request, response, next) {
     const { query: { shop }, session, baseUrl } = request;
 
-    if (session && session.accessToken) {
+    if (session && session[`SHOPIFYAUTH:${shop}`]) {
       response.cookie(TOP_LEVEL_OAUTH_COOKIE_NAME);
       next();
       return;
