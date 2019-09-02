@@ -7,7 +7,7 @@ const fetchMock = require.requireMock('node-fetch');
 const shopifyApiProxy = require('../shopifyApiProxy');
 
 const { DISALLOWED_URLS } = shopifyApiProxy;
-const PORT = 3000;
+const PORT = 3025;
 const BASE_URL = `http://localhost:${PORT}`;
 const API_ROUTE = '/api';
 

@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const { MemoryStrategy } = require('../../strategies');
 const createShopifyAuthRoutes = require('../shopifyAuth');
 
-const PORT = 3000;
+const PORT = 3025;
 const BASE_URL = `http://localhost:${PORT}`
 
 let server;

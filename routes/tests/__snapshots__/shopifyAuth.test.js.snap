@@ -7,7 +7,7 @@ exports[`shopifyAuth / with cookie access but without a prior top-level attempt 
     <html>
       <head>
         <script type=\\"text/javascript\\">
-          window.top.location.href = \\"https://shop1/admin/oauth/authorize?baseUrl=%2Fauth&scope=scope&client_id=key&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fcallback\\"
+          window.top.location.href = \\"https://shop1/admin/oauth/authorize?baseUrl=%2Fauth&scope=scope&client_id=key&redirect_uri=http%3A%2F%2Flocalhost%3A3025%2Fauth%2Fcallback\\"
         </script>
       </head>
     </html>"
